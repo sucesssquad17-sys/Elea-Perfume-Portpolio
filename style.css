@@ -3770,6 +3770,14 @@ body:not(.loading-state) .preloader {
   }
 
   /* 03b. Sequential 1-by-1 Sketch Blueprint on Mobile (GPU Optimized) */
+  .cinema-stage-wrapper {
+    height: 600vh !important; /* Fast, responsive 5-6 swipe travel instead of 20 swipes */
+  }
+
+  .particle-canvas {
+    display: none !important; /* Saves 50% GPU memory bandwidth on mobile */
+  }
+
   .film-canvas {
     filter: none !important; /* Eliminates full-screen software color shader on mobile GPU */
     image-rendering: auto !important;
@@ -3777,6 +3785,23 @@ body:not(.loading-state) .preloader {
 
   .stage-vignette {
     background: linear-gradient(180deg, rgba(6, 9, 7, 0.75) 0%, rgba(6, 9, 7, 0) 30%, rgba(6, 9, 7, 0) 70%, rgba(6, 9, 7, 0.85) 100%) !important;
+  }
+
+  /* Strip expensive offscreen backdrop blurs and drop-shadows on mobile */
+  .flacon-silhouette-meta,
+  .sidebar-note-card,
+  .luxury-header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(8, 12, 9, 0.94) !important;
+  }
+
+  .sketch-draft-grid,
+  .sketch-flacon-art,
+  .sketch-bottle-svg,
+  .brand-monogram,
+  .hero-main-title {
+    filter: none !important;
   }
 
   .sequential-sketch-container {

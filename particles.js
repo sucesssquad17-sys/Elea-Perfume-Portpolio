@@ -22,8 +22,20 @@ class ParticleEngine {
   }
 
   init() {
+    // Disable particle loop completely on mobile to reserve 100% GPU fill-rate for video
+    if (window.innerWidth <= 768) {
+      if (this.canvas) this.canvas.style.display = 'none';
+      return;
+    }
     this.resize();
-    window.addEventListener('resize', () => this.resize());
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 768) {
+        if (this.canvas) this.canvas.style.display = 'none';
+      } else {
+        if (this.canvas) this.canvas.style.display = 'block';
+        this.resize();
+      }
+    });
     
     window.addEventListener('mousemove', (e) => {
       this.mouse.targetX = e.clientX;

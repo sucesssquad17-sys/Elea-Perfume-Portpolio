@@ -517,14 +517,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // --------------------------------------------------------------------------
   lastScrollY = window.scrollY || window.pageYOffset || 0;
 
+  let lastThrottledFrame = -1;
+  let lastThrottledTime = 0;
+  function requestFrameWindowThrottled(targetFrame, radius = 6) {
+    const now = performance.now();
+    if (Math.abs(targetFrame - lastThrottledFrame) >= 2 || (now - lastThrottledTime > 75)) {
+      lastThrottledFrame = targetFrame;
+      lastThrottledTime = now;
+      requestFrameWindow(targetFrame, radius);
+    }
+  }
+
   function updateScrollProgress() {
     const scrollY = window.scrollY || window.pageYOffset || 0;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     if (maxScroll > 0) {
       targetProgress = Math.min(1, Math.max(0, scrollY / maxScroll));
-      // Pre-request frames around target scroll position immediately for zero network delay!
+      // Pre-request frames with throttling to avoid blocking mobile touch events
       const approxTargetFrame = Math.round(targetProgress * (TOTAL_FRAMES - 1));
-      requestFrameWindow(approxTargetFrame, 16);
+      requestFrameWindowThrottled(approxTargetFrame, isMobileOrSmall ? 6 : 12);
     }
 
     scrollVelocity = (scrollY - lastScrollY) * 0.4;
@@ -582,11 +593,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Main 60/120fps Animation Loop with Fluid Inertial Scrubbing
   function startRenderLoop() {
     function tick() {
-      // Responsive fluid lerp: snappy on mobile touch, cinematic on desktop
-      const lerpFactor = isMobileOrSmall ? 0.16 : 0.06;
-      smoothProgress += (targetProgress - smoothProgress) * lerpFactor;
-      if (Math.abs(targetProgress - smoothProgress) < 0.0001) {
+      // Direct 1:1 touch response on mobile (zero input delay), cinematic damping on desktop
+      if (isMobileOrSmall) {
         smoothProgress = targetProgress;
+      } else {
+        smoothProgress += (targetProgress - smoothProgress) * 0.06;
+        if (Math.abs(targetProgress - smoothProgress) < 0.0001) {
+          smoothProgress = targetProgress;
+        }
       }
 
       // Smooth scroll velocity damping & delivery to particle engine
