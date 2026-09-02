@@ -51,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const FRAME_EXTENSION = '.webp';
 
   const frames = [];
+  for (let i = 0; i < TOTAL_FRAMES; i++) {
+    const img = new Image();
+    img.decoding = 'async';
+    frames.push(img);
+  }
   // Status flags: 0 = unrequested, 1 = loading, 2 = loaded, 3 = error
   const frameStatus = new Uint8Array(TOTAL_FRAMES);
   let loadedFramesCount = 0;
@@ -141,6 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (frameStatus[index] !== 0) return; // already loading, loaded, or errored
 
     frameStatus[index] = 1;
+    if (!frames[index]) {
+      const fallbackImg = new Image();
+      fallbackImg.decoding = 'async';
+      frames[index] = fallbackImg;
+    }
     const img = frames[index];
     const frameNum = pad3(index + 1);
 
@@ -180,13 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function preloadFrames() {
     if (loaderStatus) loaderStatus.textContent = 'AWAKENING BOTANICAL ESSENCE...';
     updatePreloaderUI();
-
-    // Initialize all 478 image objects
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.decoding = 'async';
-      frames.push(img);
-    }
 
     // 1. Immediately request the first 30 frames for instantaneous hero scrubbing
     for (let i = 0; i < 30; i++) {
@@ -246,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateScrollProgress();
     drawFrame(0);
     startRenderLoop();
-    initAudioInteraction();
   }
 
   // Responsive Canvas Sizing (Reflow isolated strictly to resize event)
