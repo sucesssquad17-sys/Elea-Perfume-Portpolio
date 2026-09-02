@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let smoothProgress = 0;
   let currentTargetFrameIndex = 0;
   let lastDrawnFrameIndex = -1;
+  let lastRenderedProgress = -1;
   let isReady = false;
 
   // Cached viewport dimensions to completely eliminate forced reflows during RAF loop
@@ -452,9 +453,9 @@ document.addEventListener('DOMContentLoaded', () => {
       opacities[3] = Math.max(0, 1 - (p - 0.86) / 0.04);
     }
 
-    const stages = [sketchStages.s1, sketchStages.s2, sketchStages.s3, sketchStages.s4];
+    const stagesList = [sketchStages.s1, sketchStages.s2, sketchStages.s3, sketchStages.s4];
     for (let i = 0; i < 4; i++) {
-      const el = stages[i];
+      const el = stagesList[i];
       if (!el) continue;
       const op = opacities[i];
       el.style.opacity = op.toFixed(4);
@@ -483,6 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileChapterPill = document.getElementById('mobile-chapter-pill');
   const mobileChapterLabel = document.getElementById('mobile-chapter-label');
   const chapterNames = ['AWAKENING', '01 TOP NOTES', '02 HEART NOTES', '03 BASE NOTES', '04 DISTILLATION', 'WEAR THE UNREAL'];
+  let currentActiveTimelineIdx = -1;
 
   // Update Luxury Timeline Scrubber UI (Desktop & Mobile Sync)
   function updateTimelineUI(p) {
@@ -502,26 +504,23 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (p >= 0.16) activeIdx = 1;
     else activeIdx = 0;
 
-    // Never show floating chapter pill during Hero Awakening (p < 0.10) to prevent overlapping the ÉLÉA brand title
+    // Only update DOM classes when stage index changes
+    if (activeIdx !== currentActiveTimelineIdx) {
+      currentActiveTimelineIdx = activeIdx;
+      if (mobileChapterLabel && mobileChapterLabel.textContent !== chapterNames[activeIdx]) {
+        mobileChapterLabel.textContent = chapterNames[activeIdx];
+      }
+      timelineDots.forEach((dot, idx) => {
+        if (idx === activeIdx) dot.classList.add('active');
+        else dot.classList.remove('active');
+      });
+    }
+
     if (mobileChapterPill) {
-      const showPill = (p >= 0.88); // Only active at final climax; during chapters, sketch and notes cards provide the labels
+      const showPill = (p >= 0.88);
       mobileChapterPill.style.opacity = showPill ? '1' : '0';
       mobileChapterPill.style.visibility = showPill ? 'visible' : 'hidden';
     }
-
-    if (mobileChapterLabel && mobileChapterLabel.textContent !== chapterNames[activeIdx]) {
-      mobileChapterLabel.textContent = chapterNames[activeIdx];
-    }
-
-    timelineDots.forEach((dot, idx) => {
-      const isCurrent = idx === activeIdx;
-      const hasClass = dot.classList.contains('active');
-      if (isCurrent && !hasClass) {
-        dot.classList.add('active');
-      } else if (!isCurrent && hasClass) {
-        dot.classList.remove('active');
-      }
-    });
   }
 
   // --------------------------------------------------------------------------
@@ -634,10 +633,13 @@ document.addEventListener('DOMContentLoaded', () => {
         drawFrame(frameIdx);
       }
 
-      // Update HUD Scene overlays & Chapter Timeline
-      updatePerimeterScenes(smoothProgress);
-      updateTimelineUI(smoothProgress);
-      updateSketchCrossfade(smoothProgress);
+      // Update HUD Scene overlays & Chapter Timeline ONLY when progress has actually shifted!
+      if (Math.abs(smoothProgress - lastRenderedProgress) > 0.0001) {
+        lastRenderedProgress = smoothProgress;
+        updatePerimeterScenes(smoothProgress);
+        updateTimelineUI(smoothProgress);
+        updateSketchCrossfade(smoothProgress);
+      }
 
       requestAnimationFrame(tick);
     }

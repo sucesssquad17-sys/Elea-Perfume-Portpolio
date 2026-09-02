@@ -803,6 +803,7 @@ body:not(.loading-state) .preloader {
   height: 100vh;
   overflow: hidden;
   background: var(--color-noir);
+  contain: strict; /* Isolates viewport reflows from document body for maximum scroll FPS */
 }
 
 .film-canvas, .particle-canvas {
@@ -821,6 +822,8 @@ body:not(.loading-state) .preloader {
   filter: contrast(1.03) brightness(1.01) saturate(1.05);
   image-rendering: -webkit-optimize-contrast;
   image-rendering: high-quality;
+  will-change: transform;
+  transform: translateZ(0); /* Hardware plane GPU promotion */
 }
 
 .particle-canvas {
@@ -3779,8 +3782,11 @@ body:not(.loading-state) .preloader {
   }
 
   .film-canvas {
+    background: #060c08 url('public/frames_mobile/frame_001.webp') center / cover no-repeat !important;
     filter: none !important; /* Eliminates full-screen software color shader on mobile GPU */
     image-rendering: auto !important;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .stage-vignette {
