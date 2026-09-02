@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ÉLÉA — Maison de Haute Parfumerie | Official Store & Fragrance Collection</title>
+  <meta name="description" content="A fragrance that feels like a dream. Discover the ÉLÉA luxury niche perfume house, born from an impossible botanical sanctuary.">
+  
+  <!-- High-End Editorial Serif & Refined Metadata Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Italiana&family=Inter:wght@200;300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="main-store-body loading-state">
+
+  <!-- Cinematic Botanical Preloader -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-inner">
+      <div class="brand-monogram">É</div>
+      <div class="loader-title">É L É A</div>
+      <div class="loader-sub-title">MAISON DE HAUTE PARFUMERIE</div>
+      <div class="loader-bar-wrap">
+        <div id="loader-bar" class="loader-bar"></div>
+      </div>
+      <div class="loader-meta">
+        <span id="loader-status">ENTERING THE BOTANICAL MAISON...</span>
+        <span id="loader-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="store-toast" class="store-toast">
+    <div class="toast-content">
+      <span class="toast-icon">✨</span>
+      <span id="toast-text" class="toast-text">Added to your selection</span>
+    </div>
+  </div>
+
+  <!-- Minimal Luxury Editorial Header -->
+  <header class="luxury-header store-header" id="luxury-header">
+    <div class="header-inner">
+      <a href="main.html" class="brand-logo">ÉLÉA</a>
+      
+      <!-- Understated Editorial Navigation: COLLECTION · FINDER · STORY · BAG -->
+      <nav class="nav-links editorial-nav">
+        <a href="#collection-section" class="nav-item">COLLECTION</a>
+        <a href="#scent-finder" class="nav-item">FINDER</a>
+        <a href="#fragrance-story" class="nav-item">STORY</a>
+        <a href="#bag" id="bag-btn" class="nav-item nav-bag-btn" title="View Bag" role="button">
+          <span>BAG</span>
+          <span class="bag-counter" id="bag-counter">(0)</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Subtle Sound Indicator -->
+        <button id="sound-btn" class="header-sound-btn" title="Toggle Botanical Audio">
+          <span class="sound-bars">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="btn-label" id="sound-status-text">SOUND</span>
+        </button>
+
+        <a href="index.html" class="nav-landing-btn" title="Return to Botanical Cinema Landing Page">
+          <span>&larr; LANDING PAGE</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Shopping Bag Slide-out Drawer -->
+  <aside id="bag-drawer" class="bag-drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">YOUR SELECTION</span>
+      <button id="close-drawer-btn" class="drawer-close-btn">&times;</button>
+    </div>
+    
+    <!-- Free Shipping Progress Tracker -->
+    <div class="shipping-tracker-box">
+      <div class="tracker-status-row">
+        <span id="shipping-status-label" class="shipping-status-label">COMPLIMENTARY EXPRESS DELIVERY UNLOCKED</span>
+        <span class="shipping-icon">✈️</span>
+      </div>
+      <div class="tracker-bar-bg">
+        <div id="tracker-bar-fill" class="tracker-bar-fill" style="width: 100%;"></div>
+      </div>
+    </div>
+
+    <div class="drawer-body" id="drawer-items">
+      <div class="empty-bag-msg" id="empty-bag-msg">
+        <p>Your bag is currently empty.</p>
+        <span class="empty-sub">Discover the ÉLÉA creations below.</span>
+      </div>
+      <div class="bag-item-list" id="bag-item-list"></div>
+
+      <!-- Complimentary Sample Selection Box -->
+      <div class="sample-selection-wrap" id="sample-selection-wrap" style="display: none;">
+        <span class="sample-title">CHOOSE YOUR COMPLIMENTARY 2ML SAMPLE:</span>
+        <div class="sample-radios">
+          <label class="sample-opt active">
+            <input type="radio" name="free-sample" value="Bergamot & Jasmine (2ml)" checked>
+            <span>01 &bull; Peony Dawn</span>
+          </label>
+          <label class="sample-opt">
+            <input type="radio" name="free-sample" value="Rose Otto Extrait (2ml)">
+            <span>02 &bull; Rose Otto</span>
+          </label>
+          <label class="sample-opt">
+            <input type="radio" name="free-sample" value="Amber Oud Blanc (2ml)">
+            <span>03 &bull; Amber Oud</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <div class="subtotal-row">
+        <span>SUBTOTAL</span>
+        <span id="bag-subtotal">$0</span>
+      </div>
+      <button class="checkout-btn" id="checkout-btn">PROCEED TO CHECKOUT</button>
+      <span class="complimentary-note">Complimentary bespoke samples & signature botanical packaging included.</span>
+    </div>
+  </aside>
+
+  <!-- Quick Look Modal -->
+  <div id="quickview-modal" class="quickview-modal">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      <div class="modal-grid">
+        <div class="modal-media-col">
+          <img id="modal-img" src="" alt="Product Quickview" class="modal-product-img">
+        </div>
+        <div class="modal-details-col">
+          <span id="modal-tag" class="modal-tag">HAUTE PARFUMERIE</span>
+          <h3 id="modal-title" class="modal-title">ÉLÉA EAU DE PARFUM</h3>
+          <div id="modal-price" class="modal-price">$120</div>
+          <p id="modal-desc" class="modal-desc"></p>
+          
+          <div class="modal-specs-box">
+            <div class="spec-row">
+              <span class="spec-label">LONGEVITY</span>
+              <span class="spec-val">12 – 14 Hours</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">SILLAGE</span>
+              <span class="spec-val">Intimate to Radiant</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">DISTILLATION</span>
+              <span class="spec-val">Fractional Steam in Grasse</span>
+            </div>
+          </div>
+
+          <button id="modal-add-btn" class="modal-add-btn">ADD TO BAG</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN STORE CONTENT -->
+  <main class="store-main" id="store-main">
+
+    <!-- 01. FULL-SCREEN IMMERSIVE CINEMATIC HERO SECTION -->
+    <section class="store-hero full-viewport-hero">
+      <div class="hero-visual-frame">
+        <img src="public/assets/elea_hero_garden.jpg" alt="ÉLÉA Eau de Parfum Botanical Campaign" class="hero-visual-bg">
+        <div class="hero-tint-overlay"></div>
+      </div>
+
+      <div class="store-hero-inner">
+        <span class="store-hero-overline">MAISON DE PARFUM</span>
+        <h1 class="store-hero-title">ÉLÉA</h1>
+        <div class="store-hero-tag">HAUTE PARFUMERIE &bull; BOTANICAL SANCTUARY</div>
+        <p class="store-hero-statement">A fragrance that feels like a dream.</p>
+        <div class="hero-button-group">
+          <a href="#collection-section" class="store-hero-restrained-cta">
+            <span class="cta-text">EXPLORE THE COLLECTION</span>
+            <span class="cta-arrow">&darr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04. REFINED PRODUCT COLLECTION (CURATED 8 HAUTE OBJECTS · GENUINE LUXURY PHOTOGRAPHY) -->
+    <section class="section collection-section" id="collection-section">
+      <div class="collection-header">
+        <span class="collection-sub">EXCLUSIVE MAISON COLLECTION</span>
+        <h2 class="collection-heading">THE BOTANICAL SUITE</h2>
+        <p class="collection-intro">Eight handcrafted expressions of the fantasy garden, slow-distilled in limited seasonal vintages.</p>
+        
+        <!-- Category Filter Tabs -->
+        <div class="catalog-filters">
+          <button class="filter-tab active" data-filter="all">ALL OBJECTS</button>
+          <button class="filter-tab" data-filter="parfum">FINE PERFUME</button>
+          <button class="filter-tab" data-filter="travel">TRAVEL & SETS</button>
+          <button class="filter-tab" data-filter="home">HOME SANCTUARY</button>
+          <button class="filter-tab" data-filter="bath">BATH & BODY</button>
+        </div>
+      </div>
+
+      <div class="product-catalog-grid" id="product-grid">
+        
+        <!-- Product 1: The Whispering Garden (50ml) -->
+        <article class="product-item" id="prod-elea-50ml" data-category="parfum" data-mood="dawn">
+          <div class="product-thumb" data-name="The Whispering Garden — Eau de Parfum (50ml)" data-price="120" data-img="public/assets/elea_bottle.jpg?v=2" data-desc="The iconic signature fragrance. Luminous Calabrian bergamot and dewy morning jasmine meet blooming Grasse rose and warm sunlit cedar. Housed in a heavy lead-crystal flacon with a solid gold-engraved collar." data-tag="FLAGSHIP SIGNATURE">
+            <img src="public/assets/elea_bottle.jpg?v=2" alt="The Whispering Garden Eau de Parfum" class="product-img">
+            <span class="product-badge">SIGNATURE</span>
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(142)</span></div>
+            <h3 class="item-name">THE WHISPERING GARDEN</h3>
+            <span class="item-size">50 ML / 1.7 FL. OZ. &bull; 22% CONCENTRATION</span>
+            <div class="item-price">$120</div>
+            <p class="item-desc">Sunlit bergamot, green orchard pear, and dewy night jasmine.</p>
+            <button class="item-btn" data-name="The Whispering Garden — Eau de Parfum (50ml)" data-price="120" data-img="public/assets/elea_bottle.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+        <!-- Product 2: Midnight Petals (100ml) -->
+        <article class="product-item" id="prod-elea-100ml" data-category="parfum" data-mood="rose">
+          <div class="product-thumb" data-name="Midnight Petals — Pure Perfume Extract (100ml)" data-price="195" data-img="public/assets/elea_extrait_100ml.jpg?v=2" data-desc="A monumental collector flacon with 30% pure perfume oil concentration. Richer, deeper notes of dark smoked oud, velvet pink peony, and nocturnal orchid with an intense 14-hour skin trail." data-tag="COLLECTOR'S EDITION">
+            <img src="public/assets/elea_extrait_100ml.jpg?v=2" alt="Midnight Petals Pure Perfume Extract" class="product-img">
+            <span class="product-badge">COLLECTOR</span>
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(98)</span></div>
+            <h3 class="item-name">MIDNIGHT PETALS</h3>
+            <span class="item-size">100 ML / 3.4 FL. OZ. &bull; 30% PURE EXTRACT</span>
+            <div class="item-price">$195</div>
+            <p class="item-desc">Velvet rose, night orchid, and smoked white oud with 14h sillage.</p>
+            <button class="item-btn" data-name="Midnight Petals — Pure Perfume Extract (100ml)" data-price="195" data-img="public/assets/elea_extrait_100ml.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+        <!-- Product 3: Nomad Pocket Atomizer (10ml) -->
+        <article class="product-item" id="prod-elea-travel" data-category="travel" data-mood="amber">
+          <div class="product-thumb" data-name="Nomad Pocket Atomizer (10ml)" data-price="48" data-img="public/assets/elea_travel.jpg?v=2" data-desc="Engineered for journeys. A heavy brushed gold metal travel atomizer with magnetic closure, refillable with any ÉLÉA flacon." data-tag="TRAVEL COMPANION">
+            <img src="public/assets/elea_travel.jpg?v=2" alt="Nomad Pocket Atomizer" class="product-img">
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(86)</span></div>
+            <h3 class="item-name">NOMAD POCKET ATOMIZER</h3>
+            <span class="item-size">10 ML / 0.34 FL. OZ. &bull; REFILLABLE SPRAY</span>
+            <div class="item-price">$48</div>
+            <p class="item-desc">Brushed gold casing with magnetic seal and precision micro-mist.</p>
+            <button class="item-btn" data-name="Nomad Pocket Atomizer (10ml)" data-price="48" data-img="public/assets/elea_travel.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+        <!-- Product 4: Botanical Sanctuary Candle (250g) -->
+        <article class="product-item" id="prod-elea-candle" data-category="home" data-mood="amber">
+          <div class="product-thumb" data-name="Botanical Sanctuary Scented Candle (250g)" data-price="55" data-img="public/assets/elea_candle.jpg?v=2" data-desc="Hand-poured vegetable coconut and soy wax scented with high concentrations of golden amber resin, blooming peony, and aged cedarwood. 60 hours clean burn time." data-tag="HOME SANCTUARY">
+            <img src="public/assets/elea_candle.jpg?v=2" alt="Botanical Sanctuary Scented Candle" class="product-img">
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(112)</span></div>
+            <h3 class="item-name">BOTANICAL SANCTUARY CANDLE</h3>
+            <span class="item-size">250 G / 8.8 OZ. &bull; 60 HR CLEAN BURN</span>
+            <div class="item-price">$55</div>
+            <p class="item-desc">Hand-poured coconut wax with solid gold lid in frosted glass.</p>
+            <button class="item-btn" data-name="Botanical Sanctuary Scented Candle (250g)" data-price="55" data-img="public/assets/elea_candle.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+        <!-- Product 5: The Discovery Vault (5 x 5ml) -->
+        <article class="product-item" id="prod-elea-discovery" data-category="travel" data-mood="dawn">
+          <div class="product-thumb" data-name="The Discovery Vault — 5-Piece Sample Set" data-price="68" data-img="public/assets/elea_discovery_set.jpg?v=2" data-desc="The complete olfactory quintet. Five 5ml glass miniature flacons presented in a gold-embossed suede coffret, includes a $68 redeemable credit toward your first full-size bottle." data-tag="DISCOVERY SET">
+            <img src="public/assets/elea_discovery_set.jpg?v=2" alt="The Discovery Vault 5-Piece Set" class="product-img">
+            <span class="product-badge">BESTSELLER</span>
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(204)</span></div>
+            <h3 class="item-name">THE DISCOVERY VAULT</h3>
+            <span class="item-size">5 &times; 5 ML / 0.85 FL. OZ. &bull; 5-PIECE SET</span>
+            <div class="item-price">$68</div>
+            <p class="item-desc">Five miniature flacons in suede case with $68 credit included.</p>
+            <button class="item-btn" data-name="The Discovery Vault — 5-Piece Sample Set" data-price="68" data-img="public/assets/elea_discovery_set.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+        <!-- Product 6: Dewdrop Glow Mist (150ml) -->
+        <article class="product-item" id="prod-elea-mist" data-category="bath" data-mood="rose">
+          <div class="product-thumb" data-name="Dewdrop Glow — Hydrating Hair & Body Mist (150ml)" data-price="65" data-img="public/assets/elea_bodymist.jpg?v=2" data-desc="Alcohol-free hydrating fragrance veil infused with organic Centifolia rose water, hyaluronic acid, and cold-pressed botanical oils. Leaves skin and hair luminous." data-tag="BEAUTY ELIXIR">
+            <img src="public/assets/elea_bodymist.jpg?v=2" alt="Dewdrop Glow Hair & Body Mist" class="product-img">
+            <span class="product-badge">NEW</span>
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(73)</span></div>
+            <h3 class="item-name">DEWDROP GLOW MIST</h3>
+            <span class="item-size">150 ML / 5.1 FL. OZ. &bull; ALCOHOL-FREE</span>
+            <div class="item-price">$65</div>
+            <p class="item-desc">Hydrating floral mist with pure rose water and hyaluronic nectar.</p>
+            <button class="item-btn" data-name="Dewdrop Glow — Hydrating Hair & Body Mist (150ml)" data-price="65" data-img="public/assets/elea_bodymist.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+        <!-- Product 7: Imperial Master Carafe (150ml) -->
+        <article class="product-item" id="prod-elea-grand" data-category="parfum" data-mood="amber">
+          <div class="product-thumb" data-name="Imperial Master Carafe (150ml)" data-price="260" data-img="public/assets/elea_grand_flacon.jpg?v=2" data-desc="A monumental 150ml master carafe individually hand-blown by French master glassblowers, sealed with 24k gold cordonnet cord and gold wax medallion. Extremely limited yearly vintage." data-tag="LIMITED MASTERPIECE">
+            <img src="public/assets/elea_grand_flacon.jpg?v=2" alt="Imperial Master Carafe" class="product-img">
+            <span class="product-badge">LIMITED EDITION</span>
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(41)</span></div>
+            <h3 class="item-name">IMPERIAL MASTER CARAFE</h3>
+            <span class="item-size">150 ML / 5.1 FL. OZ. &bull; 35% PURE ESSENCE</span>
+            <div class="item-price">$260</div>
+            <p class="item-desc">Hand-blown crystal carafe with 24k gold seal and silk cord.</p>
+            <button class="item-btn" data-name="Imperial Master Carafe (150ml)" data-price="260" data-img="public/assets/elea_grand_flacon.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+        <!-- Product 8: The Nomade Duo Travel Set -->
+        <article class="product-item" id="prod-elea-travel-duo" data-category="travel" data-mood="dawn">
+          <div class="product-thumb" data-name="The Nomade Duo — Travel Set (2 x 10ml)" data-price="85" data-img="public/assets/elea_travel.jpg?v=2" data-desc="A pair of matching brushed gold refillable travel atomizers with airtight travel locks and gold presentation case. Perfect for day and evening scents." data-tag="NOMADE DUO">
+            <img src="public/assets/elea_travel.jpg?v=2" alt="The Nomade Duo Travel Set" class="product-img">
+            <span class="product-badge">TRAVEL SET</span>
+            <span class="quick-look-hint">QUICK VIEW</span>
+          </div>
+          <div class="product-info">
+            <div class="product-stars-row">★★★★★ <span class="review-count">(64)</span></div>
+            <h3 class="item-name">THE NOMADE DUO SET</h3>
+            <span class="item-size">2 &times; 10 ML / 0.68 FL. OZ. &bull; DUAL SPRAYS</span>
+            <div class="item-price">$85</div>
+            <p class="item-desc">Pair of brushed gold travel sprays for day and evening sillage.</p>
+            <button class="item-btn" data-name="The Nomade Duo — Travel Set (2 x 10ml)" data-price="85" data-img="public/assets/elea_travel.jpg?v=2">
+              ADD TO BAG
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 05. INTERACTIVE SCENT FINDER WIDGET -->
+    <section class="scent-finder-section" id="scent-finder">
+      <div class="finder-container">
+        <span class="finder-overline">BESPOKE CONSULTATION</span>
+        <h2 class="finder-title">FIND YOUR SILLAGE</h2>
+        <p class="finder-desc">Select the atmosphere that resonates with your spirit to discover your botanical match.</p>
+
+        <div class="mood-pill-group">
+          <button class="mood-pill active" data-mood="all">
+            <span class="mood-emoji">✨</span>
+            <span class="mood-label">ALL ATMOSPHERES</span>
+          </button>
+          <button class="mood-pill" data-mood="dawn">
+            <span class="mood-emoji">🌅</span>
+            <span class="mood-label">DAWN PETRICHOR &bull; LUMINOUS FRESH</span>
+          </button>
+          <button class="mood-pill" data-mood="rose">
+            <span class="mood-emoji">🌹</span>
+            <span class="mood-label">VELVET ROSE &bull; INTOXICATING FLORAL</span>
+          </button>
+          <button class="mood-pill" data-mood="amber">
+            <span class="mood-emoji">🪵</span>
+            <span class="mood-label">SMOKED AMBER &bull; WARM EARTHEN OUD</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06. EDITORIAL OLFACTORY STORY & INGREDIENT PYRAMID -->
+    <section class="fragrance-story-cinematic" id="fragrance-story">
+      <div class="story-cinematic-container">
+        
+        <div class="story-section-header">
+          <span class="story-overline">OLFACTORY ODYSSEY</span>
+          <h2 class="story-main-title">THE BOTANICAL COMPOSITION</h2>
+          <p class="story-main-sub">A continuous distillation of rare notes from an impossible garden.</p>
+        </div>
+
+        <!-- Asymmetric Chapter 01: Top Notes -->
+        <div class="story-chapter-row chapter-top-notes">
+          <div class="chapter-text-col">
+            <span class="chapter-num">01 &bull; OPENING</span>
+            <h3 class="chapter-heading">TOP NOTES</h3>
+            <div class="chapter-ingredients">Bergamot &bull; Pear &bull; Jasmine</div>
+            <p class="chapter-narrative">
+              Cold morning dew caught on night-blooming jasmine, sliced with crystalline Calabrian bergamot and crisp green pear. A luminous awakening in first dawn.
+            </p>
+          </div>
+          <div class="chapter-visual-col">
+            <div class="chapter-image-wrap">
+              <img src="public/assets/perfume_hero_banner.jpg" alt="Calabrian Bergamot & Night Jasmine" class="chapter-img">
+              <span class="chapter-photo-credit">FLACON N° 01 &bull; FIRST LIGHT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asymmetric Chapter 02: Heart Notes -->
+        <div class="story-chapter-row chapter-heart-notes reversed-row">
+          <div class="chapter-visual-col">
+            <div class="chapter-image-wrap">
+              <img src="public/assets/grasse_rose_petals.jpg" alt="Grasse Rose Otto & Velvet Peony" class="chapter-img">
+              <span class="chapter-photo-credit">EXTRACTION &bull; GRASSE ROSE OTTO</span>
+            </div>
+          </div>
+          <div class="chapter-text-col">
+            <span class="chapter-num">02 &bull; THE CORE</span>
+            <h3 class="chapter-heading">HEART NOTES</h3>
+            <div class="chapter-ingredients">Peony &bull; Rose &bull; Wisteria</div>
+            <p class="chapter-narrative">
+              The impossible floral core. Centifolia rose petals drift suspended in golden mist as wild peony and rare violet wisteria unfurl their narcotic sweetness.
+            </p>
+          </div>
+        </div>
+
+        <!-- Asymmetric Chapter 03: Base Notes -->
+        <div class="story-chapter-row chapter-base-notes">
+          <div class="chapter-text-col">
+            <span class="chapter-num">03 &bull; THE SILLAGE</span>
+            <h3 class="chapter-heading">BASE NOTES</h3>
+            <div class="chapter-ingredients">Musk &bull; Amber &bull; Sandalwood</div>
+            <p class="chapter-narrative">
+              Centuries-old fossilized golden amber resin anchoring into creamy Mysore sandalwood and warm skin musks. An eternal, magnetic memory lingering for hours.
+            </p>
+          </div>
+          <div class="chapter-visual-col">
+            <div class="chapter-image-wrap">
+              <img src="public/assets/amber_oud_perfume.jpg" alt="Fossilized Amber & Smoked Oud" class="chapter-img">
+              <span class="chapter-photo-credit">MATURATION &bull; AMBER CELLARING</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 07. SAVOIR-FAIRE: THE 3 STAGES OF SLOW DISTILLATION -->
+    <section class="savoir-faire-section" id="savoir-faire">
+      <div class="savoir-container">
+        <div class="savoir-header">
+          <span class="savoir-overline">MAISON CRAFTSMANSHIP</span>
+          <h2 class="savoir-title">THE ART OF SLOW DISTILLATION</h2>
+          <p class="savoir-sub">Uncompromising artisanal practices passed down through three generations of Grasse master perfumers.</p>
+        </div>
+
+        <div class="savoir-steps-grid">
+          <div class="savoir-step-card">
+            <span class="step-num">01</span>
+            <h3 class="step-title">DAWN HARVEST</h3>
+            <p class="step-desc">Centifolia roses and wild orchids hand-gathered at 5:30 AM while morning dew still protects the fragile floral nectar oils.</p>
+          </div>
+
+          <div class="savoir-step-card">
+            <span class="step-num">02</span>
+            <h3 class="step-title">ALEMBIC EXTRACTION</h3>
+            <p class="step-desc">Slow fractional steam distillation conducted in custom hammered-copper alembic stills at low temperature to preserve pure natural terpenes.</p>
+          </div>
+
+          <div class="savoir-step-card">
+            <span class="step-num">03</span>
+            <h3 class="step-title">FRENCH OAK CELLARING</h3>
+            <p class="step-desc">180 days of slow cellar maturation where raw fossilized amber resin marries with smoky agarwood into an unctuous golden concentrate.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07. CRITICAL PRESS ACCLAIM & REVIEWS -->
+    <section class="press-section" id="press-acclaim">
+      <div class="press-container">
+        <span class="press-overline">EDITORIAL PRAISE</span>
+        <h2 class="press-heading">CRITICAL ACCLAIM</h2>
+        
+        <div class="press-quotes-grid">
+          <div class="press-quote-card">
+            <div class="press-stars">★★★★★</div>
+            <blockquote class="press-quote-text">
+              “A breathtaking olfactory balance of dewy morning petrichor and fossilized amber. The most captivating niche fragrance of the decade.”
+            </blockquote>
+            <cite class="press-source">— VOGUE PARFUMS PARIS</cite>
+          </div>
+
+          <div class="press-quote-card featured">
+            <div class="press-stars">★★★★★</div>
+            <blockquote class="press-quote-text">
+              “ÉLÉA feels like stepping into an impossible sun-drenched botanical conservatory. It is liquid poetry.”
+            </blockquote>
+            <cite class="press-source">— LE FIGARO BEAUTÉ</cite>
+          </div>
+
+          <div class="press-quote-card">
+            <div class="press-stars">★★★★★</div>
+            <blockquote class="press-quote-text">
+              “The flacon is an architectural sculpture; the scent is pure emotional transcendence. Sillage that lasts from twilight to dawn.”
+            </blockquote>
+            <cite class="press-source">— BRITISH HARPER’S BAZAAR</cite>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08. DRAMATIC FULL-SCREEN BRAND STATEMENT (EXACT PROMPT SPECIFICATION) -->
+    <section class="section signature-monument" id="signature-statement">
+      <div class="monument-content">
+        <span class="monument-overline">THE ÉLÉA STATEMENT</span>
+        <h2 class="monument-text">
+          <span>WEAR</span>
+          <span>THE UNREAL.</span>
+        </h2>
+        <div class="monument-separator"></div>
+        <p class="monument-subtext">
+          A fragrance inspired by a place that doesn't exist.
+        </p>
+        <div class="monument-quote-author">
+          <span>— MAISON DE HAUTE PARFUMERIE &bull; GRASSE, FRANCE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09. REFINED LUXURY FOOTER -->
+    <footer class="luxury-footer">
+      <div class="footer-container">
+        <div class="footer-main-row">
+          <div class="brand-summary">
+            <h3 class="footer-logo">ÉLÉA</h3>
+            <p class="footer-desc">Maison de Haute Parfumerie &bull; Born from an impossible garden.</p>
+          </div>
+
+          <div class="newsletter-block">
+            <span class="nl-tag">PRIVATE OLFACTORY DISPATCHES</span>
+            <form class="nl-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to ÉLÉA.');">
+              <input type="email" placeholder="Your email address" class="nl-input" required>
+              <button type="submit" class="nl-btn">&rarr;</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="footer-legal-row">
+          <nav class="footer-nav">
+            <a href="index.html">BOTANICAL FILM</a>
+            <a href="#product-reveal">SHOP</a>
+            <a href="#collection-section">COLLECTION</a>
+            <a href="#fragrance-story">STORY</a>
+            <a href="#savoir-faire">SAVOIR-FAIRE</a>
+            <a href="#press-acclaim">REVIEWS</a>
+            <a href="#signature-statement">MANIFESTO</a>
+          </nav>
+          <div class="copyright">
+            &copy; 2026 ÉLÉA PARFUMS &bull; PARIS &bull; ALL RIGHTS RESERVED
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Store Cart, Filter, Audio & Modal JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bagBtn = document.getElementById('bag-btn');
+      const bagCounter = document.getElementById('bag-counter');
+      const bagDrawer = document.getElementById('bag-drawer');
+      const closeDrawerBtn = document.getElementById('close-drawer-btn');
+      const bagItemList = document.getElementById('bag-item-list');
+      const emptyBagMsg = document.getElementById('empty-bag-msg');
+      const bagSubtotal = document.getElementById('bag-subtotal');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      const toast = document.getElementById('store-toast');
+      const toastText = document.getElementById('toast-text');
+      const sampleWrap = document.getElementById('sample-selection-wrap');
+
+      // Quickview Modal Elements
+      const quickviewModal = document.getElementById('quickview-modal');
+      const modalBackdrop = document.getElementById('modal-backdrop');
+      const modalCloseBtn = document.getElementById('modal-close-btn');
+      const modalImg = document.getElementById('modal-img');
+      const modalTag = document.getElementById('modal-tag');
+      const modalTitle = document.getElementById('modal-title');
+      const modalPrice = document.getElementById('modal-price');
+      const modalDesc = document.getElementById('modal-desc');
+      const modalAddBtn = document.getElementById('modal-add-btn');
+
+      let currentModalProduct = null;
+      const cart = [];
+
+      function showToast(message) {
+        toastText.textContent = message;
+        toast.classList.add('visible');
+        setTimeout(() => {
+          toast.classList.remove('visible');
+        }, 3000);
+      }
+
+      function updateBagUI() {
+        const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+        bagCounter.textContent = `(${totalCount})`;
+
+        if (cart.length === 0) {
+          emptyBagMsg.style.display = 'block';
+          bagItemList.innerHTML = '';
+          bagSubtotal.textContent = '$0';
+          if (sampleWrap) sampleWrap.style.display = 'none';
+        } else {
+          emptyBagMsg.style.display = 'none';
+          bagItemList.innerHTML = '';
+          if (sampleWrap) sampleWrap.style.display = 'block';
+          let subtotal = 0;
+
+          cart.forEach((item, idx) => {
+            subtotal += item.price * item.qty;
+            const itemEl = document.createElement('div');
+            itemEl.className = 'bag-item-card';
+            itemEl.innerHTML = `
+              <img src="${item.img}" alt="${item.name}" class="bag-item-img">
+              <div class="bag-item-details">
+                <h4 class="bag-item-name">${item.name}</h4>
+                <div class="bag-item-price">$${item.price} &bull; QTY: ${item.qty}</div>
+                <button class="bag-item-remove" data-index="${idx}">REMOVE</button>
+              </div>
+            `;
+            bagItemList.appendChild(itemEl);
+          });
+
+          bagSubtotal.textContent = `$${subtotal}`;
+
+          bagItemList.querySelectorAll('.bag-item-remove').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const itemIdx = parseInt(btn.dataset.index);
+              cart.splice(itemIdx, 1);
+              updateBagUI();
+            });
+          });
+        }
+      }
+
+      function addToBag(name, price, img) {
+        const existing = cart.find(item => item.name === name);
+        if (existing) {
+          existing.qty++;
+        } else {
+          cart.push({ name, price, img, qty: 1 });
+        }
+        updateBagUI();
+        showToast(`Added ${name} to your selection`);
+        bagDrawer.classList.add('open');
+      }
+
+      document.querySelectorAll('.item-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const name = btn.dataset.name;
+          const price = parseFloat(btn.dataset.price);
+          const img = btn.dataset.img;
+          addToBag(name, price, img);
+        });
+      });
+
+      // Quickview Trigger on Product Thumbnails
+      document.querySelectorAll('.product-thumb').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          const name = thumb.dataset.name;
+          const price = thumb.dataset.price;
+          const img = thumb.dataset.img;
+          const desc = thumb.dataset.desc;
+          const tag = thumb.dataset.tag || 'HAUTE PARFUMERIE';
+
+          currentModalProduct = { name, price: parseFloat(price), img };
+
+          modalImg.src = img;
+          modalTitle.textContent = name;
+          modalPrice.textContent = `$${price}`;
+          modalDesc.textContent = desc;
+          modalTag.textContent = tag;
+
+          quickviewModal.classList.add('open');
+        });
+      });
+
+      function closeModal() {
+        quickviewModal.classList.remove('open');
+      }
+
+      modalBackdrop.addEventListener('click', closeModal);
+      modalCloseBtn.addEventListener('click', closeModal);
+
+      modalAddBtn.addEventListener('click', () => {
+        if (currentModalProduct) {
+          addToBag(currentModalProduct.name, currentModalProduct.price, currentModalProduct.img);
+          closeModal();
+        }
+      });
+
+      bagBtn.addEventListener('click', () => bagDrawer.classList.add('open'));
+      closeDrawerBtn.addEventListener('click', () => bagDrawer.classList.remove('open'));
+
+      checkoutBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+          alert('Your bag is currently empty.');
+        } else {
+          const sample = document.querySelector('input[name="free-sample"]:checked')?.value || 'Peony Dawn';
+          alert(`Proceeding to luxury checkout for ${cart.reduce((s, i) => s + i.qty, 0)} items.\n\nIncluded Free Sample: ${sample}\nTotal: ${bagSubtotal.textContent}`);
+        }
+      });
+
+      // Category filter tabs
+      const filterTabs = document.querySelectorAll('.filter-tab');
+      const productItems = document.querySelectorAll('.product-item');
+
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          filterTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const cat = tab.dataset.filter;
+
+          productItems.forEach(item => {
+            if (cat === 'all' || (item.dataset.category && item.dataset.category.includes(cat))) {
+              item.style.display = 'flex';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Preloader Progress Animation
+      const loaderBar = document.getElementById('loader-bar');
+      const loaderPercent = document.getElementById('loader-percent');
+      const loaderStatus = document.getElementById('loader-status');
+      let progress = 0;
+      const statuses = [
+        "ENTERING THE BOTANICAL MAISON...",
+        "CRYSTALLIZING GRASSE ROSE OTTO...",
+        "INFUSING CALABRIAN BERGAMOT...",
+        "UNVEILING THE HAUTE COLLECTION..."
+      ];
+      
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 22) + 12;
+        if (progress > 100) progress = 100;
+        
+        if (loaderBar) loaderBar.style.width = progress + '%';
+        if (loaderPercent) loaderPercent.textContent = progress + '%';
+        
+        const statusIdx = Math.min(statuses.length - 1, Math.floor((progress / 100) * statuses.length));
+        if (loaderStatus) loaderStatus.textContent = statuses[statusIdx];
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            document.body.classList.remove('loading-state');
+          }, 450);
+        }
+      }, 70);
+
+      // Scent Finder Mood Filter
+      const moodPills = document.querySelectorAll('.mood-pill');
+      moodPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          moodPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const mood = pill.dataset.mood;
+
+          productItems.forEach(item => {
+            if (mood === 'all' || item.dataset.mood === mood) {
+              item.style.display = 'flex';
+              item.classList.add('highlight-match');
+              setTimeout(() => item.classList.remove('highlight-match'), 1200);
+            } else {
+              item.style.display = 'none';
+            }
+          });
+
+          // Scroll smoothly to product grid
+          document.getElementById('collection-section').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // URL Parameter handler for instant Buy Now kicking from Botanical Landing Page
+      const urlParams = new URLSearchParams(window.location.search);
+      const buyProductKey = urlParams.get('buy');
+      if (buyProductKey) {
+        setTimeout(() => {
+          const targetCard = document.getElementById(buyProductKey);
+          if (targetCard) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.classList.add('highlight-match');
+            
+            // Auto click Add to Bag & open Shopping Bag drawer
+            const addBtn = targetCard.querySelector('.item-btn');
+            if (addBtn) {
+              addBtn.click();
+            }
+          }
+        }, 750);
+      }
+    });
+  </script>
+</body>
+</html>

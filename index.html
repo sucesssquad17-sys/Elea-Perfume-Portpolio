@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ÉLÉA — Eau de Parfum | The Botanical Journey</title>
+  <meta name="description" content="ÉLÉA Eau de Parfum. An interactive botanical journey through an impossible garden. Scroll to awaken the fragrance.">
+  
+  <!-- High-End Editorial & Hand-Sketched Pencil Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Italiana&family=Inter:wght@200;300;400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=6.7">
+</head>
+<body class="landing-body loading-state">
+
+  <!-- Cinematic Botanical Preloader Screen (Haute Parfumerie Reference Design) -->
+  <div id="preloader" class="preloader" role="progressbar" aria-label="Awakening Botanical Essence">
+    <!-- Luxury Top-Left Circular Seal -->
+    <div class="preloader-seal-top-left" aria-hidden="true">
+      <svg viewBox="0 0 100 100" class="seal-svg">
+        <defs>
+          <path id="sealPath" d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" />
+        </defs>
+        <circle cx="50" cy="50" r="47" stroke="rgba(230, 195, 106, 0.35)" stroke-width="0.8" fill="none" stroke-dasharray="2.2, 2.5"/>
+        <circle cx="50" cy="50" r="43" stroke="rgba(230, 195, 106, 0.65)" stroke-width="0.8" fill="none"/>
+        <circle cx="50" cy="50" r="28" stroke="rgba(230, 195, 106, 0.22)" stroke-width="0.6" fill="none"/>
+        <text class="seal-text">
+          <textPath href="#sealPath" startOffset="50%" text-anchor="middle">
+            FINE FRAGRANCES • FROM NATURE •
+          </textPath>
+        </text>
+        <g transform="translate(42, 39) scale(0.65)" stroke="#F5D36D" stroke-width="1.3" fill="none">
+          <path d="M12 24 C12 14 6 6 0 6 C6 14 12 18 12 24 Z" fill="rgba(245, 211, 109, 0.22)"/>
+          <path d="M12 24 C12 14 18 6 24 6 C18 14 12 18 12 24 Z" fill="rgba(245, 211, 109, 0.22)"/>
+          <line x1="12" y1="26" x2="12" y2="4" stroke="#F5D36D" stroke-width="1.4"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Luxury Right Edge Vertical Typography & Signature -->
+    <div class="preloader-right-rail" aria-hidden="true">
+      <span class="rail-vertical-text">NATURE • SCIENCE • ARTISTRY</span>
+      <div class="rail-bottom-signature">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="#F5D36D" stroke-width="1.2" fill="none" class="rail-signature-icon">
+          <path d="M12 21 C12 13 7 6 2 6 C7 13 12 17 12 21 Z" fill="rgba(245, 211, 109, 0.2)"/>
+          <path d="M12 21 C12 13 17 6 22 6 C17 13 12 17 12 21 Z" fill="rgba(245, 211, 109, 0.2)"/>
+          <line x1="12" y1="23" x2="12" y2="3" stroke="#F5D36D" stroke-width="1.3"/>
+        </svg>
+        <span class="rail-brand">ÉLÉA</span>
+        <span class="rail-est">EST. 2024</span>
+      </div>
+    </div>
+
+    <!-- Center Haute Parfumerie Lockup -->
+    <div class="preloader-inner">
+      <div class="brand-monogram">É</div>
+      <h2 class="loader-title">É L É A</h2>
+      <p class="loader-sub-title">MAISON DE HAUTE PARFUMERIE</p>
+
+      <!-- Delicate Gold Filigree Divider -->
+      <div class="loader-filigree-divider" aria-hidden="true">
+        <span class="filigree-line"></span>
+        <svg viewBox="0 0 32 18" width="22" height="14" class="filigree-icon">
+          <path d="M16 16 C16 9 12 3 7 3 C10 8 14 11 16 16 Z" fill="rgba(245, 211, 109, 0.45)" stroke="#F5D36D" stroke-width="0.8"/>
+          <path d="M16 16 C16 9 20 3 25 3 C22 8 18 11 16 16 Z" fill="rgba(245, 211, 109, 0.45)" stroke="#F5D36D" stroke-width="0.8"/>
+          <path d="M16 16 C16 8 16 2 16 0 C16 2 16 8 16 16 Z" stroke="#FFF5D0" stroke-width="0.9"/>
+          <circle cx="16" cy="1" r="1.2" fill="#FFF5D0"/>
+        </svg>
+        <span class="filigree-line"></span>
+      </div>
+
+      <!-- Glowing Progress Row (Bar + Percentage) -->
+      <div class="loader-progress-row">
+        <div class="loader-bar-wrap">
+          <div id="loader-bar" class="loader-bar"></div>
+        </div>
+        <span id="loader-percent" class="loader-percent">0%</span>
+      </div>
+
+      <!-- Descriptive Status & Tagline -->
+      <div id="loader-status" class="loader-status">AWAKENING BOTANICAL ESSENCE...</div>
+      <div class="loader-tagline">CRAFTED WITH NATURE. REFINED BY TIME.</div>
+    </div>
+
+    <!-- Bottom Center Breathe In Elegance Seal -->
+    <div class="preloader-seal-bottom" aria-hidden="true">
+      <div class="seal-bottom-circle">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="#F5D36D" stroke-width="1.2" fill="none">
+          <path d="M12 21 C12 13 7 6 2 6 C7 13 12 17 12 21 Z" fill="rgba(245, 211, 109, 0.25)"/>
+          <path d="M12 21 C12 13 17 6 22 6 C17 13 12 17 12 21 Z" fill="rgba(245, 211, 109, 0.25)"/>
+          <line x1="12" y1="23" x2="12" y2="3" stroke="#F5D36D" stroke-width="1.3"/>
+        </svg>
+      </div>
+      <span class="seal-bottom-text">BREATHE IN ELEGANCE</span>
+    </div>
+  </div>
+
+  <!-- Ambient Audio Element -->
+  <audio id="soundtrack-audio" src="public/assets/soundtrack.mp3?v=2" preload="auto" loop></audio>
+
+  <!-- Minimal Header -->
+  <header class="luxury-header landing-header" id="luxury-header">
+    <div class="header-inner">
+      <a href="main.html" class="brand-logo">ÉLÉA</a>
+      
+      <div class="header-actions">
+        <button id="sound-btn" class="header-icon-btn" title="Toggle Soundscape">
+          <span class="sound-wave">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="btn-label" id="sound-status-text">SOUND</span>
+        </button>
+
+        <a href="main.html" class="nav-enter-link" title="Discover & Purchase ÉLÉA">
+          <span>BUY NOW</span>
+          <span class="nav-arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ultra-Minimal Mobile Top Scroll Progress (Mobile Only) -->
+  <div class="mobile-scroll-progress" id="mobile-scroll-progress" aria-hidden="true">
+    <div class="mobile-scroll-progress-bar" id="mobile-scroll-progress-bar"></div>
+  </div>
+
+  <!-- PURE BOTANICAL CINEMA STAGE (100% UNOBSTRUCTED BUTTERFLY CANVAS) -->
+  <div class="cinema-stage-wrapper" id="cinema-stage-wrapper">
+    <div class="cinema-stage-sticky">
+      
+      <!-- Video Frame Scrubbing Canvas -->
+      <canvas id="film-canvas" class="film-canvas"></canvas>
+      
+      <!-- Subtle Spores Canvas -->
+      <canvas id="particle-canvas" class="particle-canvas"></canvas>
+      
+      <!-- Soft Vignette (No center obstruction) -->
+      <div class="stage-vignette"></div>
+
+      <!-- Mobile Chapter Indicator Pill (Visible strictly on mobile) -->
+      <div class="mobile-chapter-pill" id="mobile-chapter-pill" aria-hidden="true" style="opacity: 0; visibility: hidden;">
+        <span class="mobile-chapter-pip"></span>
+        <span class="mobile-chapter-label" id="mobile-chapter-label">AWAKENING</span>
+      </div>
+
+      <!-- LUXURY VERTICAL CHAPTER TIMELINE SCRUBBER (Desktop & Tablet) -->
+      <nav class="luxury-timeline" id="luxury-timeline" aria-label="Fragrance Journey Stages">
+        <div class="timeline-rail">
+          <div class="timeline-indicator" id="timeline-indicator"></div>
+        </div>
+        <div class="timeline-chapters">
+          <button type="button" class="timeline-dot active" data-progress="0" data-label="Awakening" title="Awakening">
+            <span class="dot-pip"></span>
+            <span class="dot-chapter-name">AWAKENING</span>
+          </button>
+          <button type="button" class="timeline-dot" data-progress="0.21" data-label="Top Notes" title="Top Notes">
+            <span class="dot-pip"></span>
+            <span class="dot-chapter-name">01 TOP NOTES</span>
+          </button>
+          <button type="button" class="timeline-dot" data-progress="0.41" data-label="Heart Notes" title="Heart Notes">
+            <span class="dot-pip"></span>
+            <span class="dot-chapter-name">02 HEART NOTES</span>
+          </button>
+          <button type="button" class="timeline-dot" data-progress="0.67" data-label="Base Notes" title="Base Notes">
+            <span class="dot-pip"></span>
+            <span class="dot-chapter-name">03 BASE NOTES</span>
+          </button>
+          <button type="button" class="timeline-dot" data-progress="0.83" data-label="Distillation" title="Slow Distillation">
+            <span class="dot-pip"></span>
+            <span class="dot-chapter-name">04 DISTILLATION</span>
+          </button>
+          <button type="button" class="timeline-dot" data-progress="0.95" data-label="Wear The Unreal" title="Wear The Unreal">
+            <span class="dot-pip"></span>
+            <span class="dot-chapter-name">WEAR THE UNREAL</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- SEQUENTIAL 1-BY-1 DETAILED ARCHITECTURAL SKETCH BLUEPRINTS (Scroll-Driven) -->
+      <div class="sequential-sketch-container" id="sequential-sketch-container">
+        
+        <!-- Blueprint Stage 1: 50ml Crystal Flacon (Ethereal Luminous Silhouette) -->
+        <div class="sketch-stage-item sketch-luminous-silhouette" id="sketch-stage-1">
+          <div class="flacon-silhouette-vessel">
+            <div class="flacon-glow-halo" aria-hidden="true"></div>
+            <div class="sketch-svg-wrap">
+              <svg class="sketch-bottle-svg" viewBox="0 0 190 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="goldShimmer1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFF0BE" stop-opacity="0.9"/>
+                    <stop offset="50%" stop-color="#F5D36D" stop-opacity="0.7"/>
+                    <stop offset="100%" stop-color="#C5A059" stop-opacity="0.4"/>
+                  </linearGradient>
+                </defs>
+                <!-- Center Drafting Symmetry Axis -->
+                <line x1="95" y1="8" x2="95" y2="222" stroke="rgba(245, 211, 109, 0.25)" stroke-dasharray="8,3,2,3" stroke-width="0.7"/>
+                
+                <!-- Vertical Height Caliper & Measurement Dimension -->
+                <line x1="14" y1="14" x2="14" y2="204" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="9" y1="14" x2="19" y2="14" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="9" y1="204" x2="19" y2="204" stroke="#F5D36D" stroke-width="0.9"/>
+                <path d="M14 14 L11 22 M14 14 L17 22" stroke="#F5D36D" stroke-width="0.8"/>
+                <path d="M14 204 L11 196 M14 204 L17 196" stroke="#F5D36D" stroke-width="0.8"/>
+                <text x="8" y="114" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="end">↕ 145.0 mm</text>
+                
+                <!-- Diamond Faceted Stopper (Step-Cut Octagon) -->
+                <polygon points="95,12 118,24 114,50 76,50 72,24" stroke="#F5D36D" stroke-width="1.5" stroke-linejoin="round" fill="rgba(245, 211, 109, 0.08)"/>
+                <!-- Inner Facet Refraction Geometry -->
+                <polygon points="95,18 108,26 105,44 85,44 82,26" stroke="rgba(245, 211, 109, 0.7)" stroke-width="0.8"/>
+                <line x1="95" y1="12" x2="95" y2="50" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="72" y1="24" x2="118" y2="24" stroke="rgba(245, 211, 109, 0.8)" stroke-width="0.8"/>
+                <line x1="82" y1="26" x2="76" y2="50" stroke="rgba(245, 211, 109, 0.5)" stroke-width="0.6"/>
+                <line x1="108" y1="26" x2="114" y2="50" stroke="rgba(245, 211, 109, 0.5)" stroke-width="0.6"/>
+                <!-- Frosted Emery Stopper Plug Base -->
+                <rect x="85" y="50" width="20" height="8" stroke="#E5CA9E" stroke-width="1" stroke-dasharray="1.5,1.5"/>
+                
+                <!-- Goldsmith Collar (Orfèvrerie Ciselée) -->
+                <rect x="82" y="58" width="26" height="14" rx="2" stroke="#F5D36D" stroke-width="1.4" fill="rgba(245, 211, 109, 0.15)"/>
+                <!-- Milled Knurling Details -->
+                <line x1="82" y1="62" x2="108" y2="62" stroke="#E5CA9E" stroke-width="0.7"/>
+                <line x1="82" y1="68" x2="108" y2="68" stroke="#E5CA9E" stroke-width="0.7"/>
+                <line x1="87" y1="58" x2="87" y2="72" stroke="rgba(245, 211, 109, 0.6)" stroke-width="0.6"/>
+                <line x1="95" y1="58" x2="95" y2="72" stroke="rgba(245, 211, 109, 0.6)" stroke-width="0.6"/>
+                <line x1="103" y1="58" x2="103" y2="72" stroke="rgba(245, 211, 109, 0.6)" stroke-width="0.6"/>
+                
+                <!-- Hand-Tied Cordonnet Silk Cord & Wax Medallion Crest -->
+                <path d="M108 65 C118 63 126 70 128 80 C122 78 114 74 108 70" stroke="#E5CA9E" stroke-width="1.2" fill="none"/>
+                <circle cx="128" cy="83" r="5.5" stroke="#F5D36D" stroke-width="1.1" fill="rgba(245, 211, 109, 0.25)"/>
+                <text x="128" y="86" fill="#F5D36D" font-size="6.5" font-family="'Caveat', cursive" text-anchor="middle">É</text>
+                
+                <!-- Octagonal Emerald-Cut Crystal Body (Outer Walls) -->
+                <polygon points="68,76 122,76 142,96 142,184 122,204 68,204 48,184 48,96" stroke="#F5D36D" stroke-width="1.7" stroke-linejoin="round" fill="rgba(12, 18, 14, 0.6)"/>
+                
+                <!-- Glass Wall Thickness & Double Bevel Contour (4.5mm Epaisseur) -->
+                <polygon points="72,82 118,82 134,98 134,178 118,194 72,194 56,178 56,98" stroke="rgba(245, 211, 109, 0.55)" stroke-width="0.9" stroke-linejoin="round"/>
+                
+                <!-- Crystal Shoulder Diagonal Shading Hatching -->
+                <line x1="50" y1="106" x2="66" y2="90" stroke="rgba(245, 211, 109, 0.4)" stroke-width="0.6"/>
+                <line x1="54" y1="114" x2="70" y2="98" stroke="rgba(245, 211, 109, 0.4)" stroke-width="0.6"/>
+                <line x1="58" y1="122" x2="74" y2="106" stroke="rgba(245, 211, 109, 0.4)" stroke-width="0.6"/>
+                
+                <line x1="140" y1="106" x2="124" y2="90" stroke="rgba(245, 211, 109, 0.4)" stroke-width="0.6"/>
+                <line x1="136" y1="114" x2="120" y2="98" stroke="rgba(245, 211, 109, 0.4)" stroke-width="0.6"/>
+                <line x1="132" y1="122" x2="116" y2="106" stroke="rgba(245, 211, 109, 0.4)" stroke-width="0.6"/>
+                
+                <!-- Inner Fragrance Chamber & Liquid Meniscus -->
+                <path d="M60 108 Q95 112 130 108" stroke="#F5D36D" stroke-width="1.2"/>
+                <path d="M60 114 Q95 118 130 114" stroke="rgba(245, 211, 109, 0.5)" stroke-width="0.7" stroke-dasharray="2,2"/>
+                
+                <!-- Suction Dip Tube & Ball-Valve Atomizer Core -->
+                <line x1="93" y1="72" x2="93" y2="190" stroke="rgba(229, 202, 158, 0.85)" stroke-width="1.1"/>
+                <line x1="97" y1="72" x2="97" y2="190" stroke="rgba(229, 202, 158, 0.85)" stroke-width="1.1"/>
+                <circle cx="95" cy="188" r="2.5" stroke="#F5D36D" stroke-width="0.9"/>
+                
+                <!-- Heavy Solid Crystal Base (16mm Pedestal Punt) -->
+                <line x1="68" y1="194" x2="122" y2="194" stroke="rgba(245, 211, 109, 0.6)" stroke-width="0.9"/>
+                <path d="M78 204 Q95 197 112 204" stroke="rgba(245, 211, 109, 0.7)" stroke-width="0.8"/>
+                
+                <!-- Horizontal Width Dimension Caliper -->
+                <line x1="48" y1="216" x2="142" y2="216" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="48" y1="211" x2="48" y2="221" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="142" y1="211" x2="142" y2="221" stroke="#F5D36D" stroke-width="0.9"/>
+                <text x="95" y="226" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="middle">↔ ⌀ 68.0 mm</text>
+              </svg>
+            </div>
+          </div>
+          <div class="flacon-silhouette-meta">
+            <span class="vessel-badge">ATELIER FLACON · 50ML</span>
+            <h3 class="vessel-title">The Whispering Garden</h3>
+            <p class="vessel-spec">Octagonal Step-Cut Crystal · 24k Gold Engraved Collar</p>
+            <div class="vessel-action-line">
+              <span class="vessel-price">50 ML · $120</span>
+              <a href="main.html?buy=prod-elea-50ml#prod-elea-50ml" class="vessel-discover-link" data-product="prod-elea-50ml">
+                <span>ACQUIRE</span>
+                <span class="link-arrow">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blueprint Stage 2: 100ml Pure Extrait (Ethereal Luminous Silhouette) -->
+        <div class="sketch-stage-item sketch-luminous-silhouette" id="sketch-stage-2">
+          <div class="flacon-silhouette-vessel">
+            <div class="flacon-glow-halo" aria-hidden="true"></div>
+            <div class="sketch-svg-wrap">
+              <svg class="sketch-bottle-svg" viewBox="0 0 190 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Center Drafting Symmetry Axis -->
+                <line x1="95" y1="6" x2="95" y2="224" stroke="rgba(245, 211, 109, 0.25)" stroke-dasharray="8,3,2,3" stroke-width="0.7"/>
+                
+                <!-- Vertical Caliper Dimension -->
+                <line x1="14" y1="12" x2="14" y2="206" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="9" y1="12" x2="19" y2="12" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="9" y1="206" x2="19" y2="206" stroke="#F5D36D" stroke-width="0.9"/>
+                <text x="8" y="114" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="end">↕ 168.0 mm</text>
+                
+                <!-- Monumental Architectural Cap (24-Flute Classical Column) -->
+                <rect x="76" y="12" width="38" height="42" rx="2" stroke="#F5D36D" stroke-width="1.6" fill="rgba(245, 211, 109, 0.12)"/>
+                <!-- Fluted Column Reed Lines -->
+                <line x1="82" y1="16" x2="82" y2="50" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="88" y1="16" x2="88" y2="50" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="95" y1="16" x2="95" y2="50" stroke="#FFF0BE" stroke-width="1.1"/>
+                <line x1="102" y1="16" x2="102" y2="50" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="108" y1="16" x2="108" y2="50" stroke="#F5D36D" stroke-width="0.9"/>
+                <!-- Stepped Capital Rims -->
+                <line x1="76" y1="18" x2="114" y2="18" stroke="#E5CA9E" stroke-width="0.9"/>
+                <line x1="76" y1="48" x2="114" y2="48" stroke="#E5CA9E" stroke-width="0.9"/>
+                
+                <!-- Gold Neck Collar & Gasket Ring -->
+                <rect x="82" y="54" width="26" height="10" stroke="#E5CA9E" stroke-width="1.3" fill="rgba(229, 202, 158, 0.2)"/>
+                <line x1="82" y1="59" x2="108" y2="59" stroke="#F5D36D" stroke-width="0.7"/>
+                
+                <!-- Monolithic Glass Block Outer Architecture (100ml Pure Extrait) -->
+                <rect x="48" y="64" width="94" height="142" rx="3.5" stroke="#F5D36D" stroke-width="1.8" fill="rgba(12, 18, 14, 0.6)"/>
+                
+                <!-- Beveled Chamfer Facet Lines -->
+                <line x1="48" y1="64" x2="62" y2="78" stroke="#E5CA9E" stroke-width="1"/>
+                <line x1="142" y1="64" x2="128" y2="78" stroke="#E5CA9E" stroke-width="1"/>
+                <line x1="48" y1="206" x2="62" y2="192" stroke="#E5CA9E" stroke-width="1"/>
+                <line x1="142" y1="206" x2="128" y2="192" stroke="#E5CA9E" stroke-width="1"/>
+                
+                <!-- Inner Pure Extrait Reservoir (Double Wall Chamber) -->
+                <rect x="62" y="78" width="66" height="114" rx="2" stroke="rgba(245, 211, 109, 0.75)" stroke-width="1" stroke-dasharray="3,2"/>
+                
+                <!-- Light Refraction Shading Cross-Hatch -->
+                <line x1="50" y1="84" x2="62" y2="72" stroke="rgba(245, 211, 109, 0.35)" stroke-width="0.6"/>
+                <line x1="50" y1="100" x2="62" y2="88" stroke="rgba(245, 211, 109, 0.35)" stroke-width="0.6"/>
+                <line x1="50" y1="116" x2="62" y2="104" stroke="rgba(245, 211, 109, 0.35)" stroke-width="0.6"/>
+                
+                <!-- 30% High-Concentration Liquid Level & Amber Glow -->
+                <path d="M62 102 Q95 106 128 102" stroke="#F5D36D" stroke-width="1.3"/>
+                <path d="M62 107 Q95 111 128 107" stroke="rgba(245, 211, 109, 0.5)" stroke-width="0.8" stroke-dasharray="2,2"/>
+                
+                <!-- Massive 18mm Solid Crystal Pedestal Base -->
+                <line x1="48" y1="192" x2="142" y2="192" stroke="rgba(245, 211, 109, 0.65)" stroke-width="1"/>
+                <path d="M66 206 Q95 198 124 206" stroke="rgba(245, 211, 109, 0.7)" stroke-width="0.8"/>
+                
+                <!-- Width Caliper Dimension -->
+                <line x1="48" y1="218" x2="142" y2="218" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="48" y1="213" x2="48" y2="223" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="142" y1="213" x2="142" y2="223" stroke="#F5D36D" stroke-width="0.9"/>
+                <text x="95" y="227" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="middle">↔ 82.0 mm (Extrait)</text>
+              </svg>
+            </div>
+          </div>
+          <div class="flacon-silhouette-meta">
+            <span class="vessel-badge">COLLECTOR EXTRAIT · 100ML</span>
+            <h3 class="vessel-title">Midnight Petals</h3>
+            <p class="vessel-spec">Monumental Monolithic Glass · Hand-Stamped Wax Crest</p>
+            <div class="vessel-action-line">
+              <span class="vessel-price">100 ML · $195</span>
+              <a href="main.html?buy=prod-elea-100ml#prod-elea-100ml" class="vessel-discover-link" data-product="prod-elea-100ml">
+                <span>ACQUIRE</span>
+                <span class="link-arrow">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blueprint Stage 3: 10ml Travel Atomizer (Ethereal Luminous Silhouette) -->
+        <div class="sketch-stage-item sketch-luminous-silhouette" id="sketch-stage-3">
+          <div class="flacon-silhouette-vessel">
+            <div class="flacon-glow-halo" aria-hidden="true"></div>
+            <div class="sketch-svg-wrap">
+              <svg class="sketch-bottle-svg" viewBox="0 0 170 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Center Axis -->
+                <line x1="85" y1="10" x2="85" y2="222" stroke="rgba(245, 211, 109, 0.25)" stroke-dasharray="8,3,2,3" stroke-width="0.7"/>
+                
+                <!-- Vertical Gauge -->
+                <line x1="16" y1="22" x2="16" y2="200" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="11" y1="22" x2="21" y2="22" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="11" y1="200" x2="21" y2="200" stroke="#F5D36D" stroke-width="0.9"/>
+                <text x="10" y="114" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="end">↕ 90.0 mm</text>
+                
+                <!-- Precision Micro-Atomizer Actuator Button -->
+                <rect x="73" y="18" width="24" height="26" rx="2.5" stroke="#F5D36D" stroke-width="1.5" fill="rgba(245, 211, 109, 0.12)"/>
+                <!-- Micro-Spray Orifice Nozzle -->
+                <circle cx="85" cy="30" r="2.8" stroke="#E5CA9E" stroke-width="1.2" fill="#F5D36D"/>
+                <path d="M85 30 L98 24 M85 30 L100 30 M85 30 L98 36" stroke="rgba(245, 211, 109, 0.6)" stroke-width="0.7" stroke-dasharray="1.5,1.5"/>
+                
+                <!-- Diamond-Knurled Guilloché Collar -->
+                <rect x="66" y="44" width="38" height="16" stroke="#E5CA9E" stroke-width="1.3" fill="rgba(229, 202, 158, 0.15)"/>
+                <!-- Guilloché Diamond Mesh Pattern -->
+                <line x1="70" y1="44" x2="78" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                <line x1="76" y1="44" x2="84" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                <line x1="82" y1="44" x2="90" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                <line x1="88" y1="44" x2="96" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                <line x1="78" y1="44" x2="70" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                <line x1="84" y1="44" x2="76" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                <line x1="90" y1="44" x2="82" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                <line x1="96" y1="44" x2="88" y2="60" stroke="#F5D36D" stroke-width="0.7"/>
+                
+                <!-- Precision Ribbed Brass Body Cylinder (10ml Travel Tube) -->
+                <rect x="66" y="60" width="38" height="140" rx="4" stroke="#F5D36D" stroke-width="1.7" fill="rgba(12, 18, 14, 0.6)"/>
+                <!-- Vertical Pinstripe Grooves -->
+                <line x1="74" y1="64" x2="74" y2="196" stroke="rgba(245, 211, 109, 0.7)" stroke-width="0.8"/>
+                <line x1="81" y1="64" x2="81" y2="196" stroke="rgba(245, 211, 109, 0.9)" stroke-width="1"/>
+                <line x1="89" y1="64" x2="89" y2="196" stroke="rgba(245, 211, 109, 0.9)" stroke-width="1"/>
+                <line x1="96" y1="64" x2="96" y2="196" stroke="rgba(245, 211, 109, 0.7)" stroke-width="0.8"/>
+                
+                <!-- Inner Spring & Pump Internal Drafting Schematic -->
+                <path d="M82 72 Q88 75 82 78 Q88 81 82 84 Q88 87 82 90" stroke="rgba(229, 202, 158, 0.7)" stroke-width="0.9" fill="none"/>
+                
+                <!-- Thread Joint & Base Plug -->
+                <line x1="66" y1="190" x2="104" y2="190" stroke="rgba(245, 211, 109, 0.6)" stroke-width="0.8"/>
+                
+                <!-- Diameter Gauge -->
+                <line x1="66" y1="212" x2="104" y2="212" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="66" y1="207" x2="66" y2="217" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="104" y1="207" x2="104" y2="217" stroke="#F5D36D" stroke-width="0.9"/>
+                <text x="85" y="222" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="middle">↔ ⌀ 18.0 mm</text>
+              </svg>
+            </div>
+          </div>
+          <div class="flacon-silhouette-meta">
+            <span class="vessel-badge">NOMAD ATOMIZER · 10ML</span>
+            <h3 class="vessel-title">Nomad Pocket Spray</h3>
+            <p class="vessel-spec">Ribbed Brushed Gold Brass · Precision Micro-Mist</p>
+            <div class="vessel-action-line">
+              <span class="vessel-price">10 ML · $48</span>
+              <a href="main.html?buy=prod-elea-travel#prod-elea-travel" class="vessel-discover-link" data-product="prod-elea-travel">
+                <span>ACQUIRE</span>
+                <span class="link-arrow">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blueprint Stage 4: 250g Botanical Candle (Ethereal Luminous Silhouette) -->
+        <div class="sketch-stage-item sketch-luminous-silhouette" id="sketch-stage-4">
+          <div class="flacon-silhouette-vessel">
+            <div class="flacon-glow-halo" aria-hidden="true"></div>
+            <div class="sketch-svg-wrap">
+              <svg class="sketch-bottle-svg" viewBox="0 0 190 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Center Axis -->
+                <line x1="95" y1="8" x2="95" y2="222" stroke="rgba(245, 211, 109, 0.25)" stroke-dasharray="8,3,2,3" stroke-width="0.7"/>
+                
+                <!-- Vertical Gauge -->
+                <line x1="14" y1="36" x2="14" y2="198" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="9" y1="36" x2="19" y2="36" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="9" y1="198" x2="19" y2="198" stroke="#F5D36D" stroke-width="0.9"/>
+                <text x="8" y="118" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="end">↕ 94.0 mm</text>
+                
+                <!-- Luminous Botanical Flame & Aura -->
+                <circle cx="95" cy="24" r="14" stroke="rgba(245, 211, 109, 0.3)" stroke-dasharray="2,3" stroke-width="0.7"/>
+                <path d="M95 38 Q103 20 95 8 Q87 20 95 38 Z" stroke="#F5D36D" stroke-width="1.5" fill="rgba(245, 211, 109, 0.3)"/>
+                <path d="M95 36 Q100 24 95 16 Q90 24 95 36 Z" stroke="#FFF0BE" stroke-width="0.9" fill="rgba(255, 240, 190, 0.5)"/>
+                <!-- Natural Braided Cotton Wick -->
+                <path d="M95 32 Q97 42 95 50" stroke="#E5CA9E" stroke-width="1.6" fill="none"/>
+                
+                <!-- Molten Wax Pool Ellipse with Thermal Flow Lines -->
+                <ellipse cx="95" cy="52" rx="46" ry="10.5" stroke="rgba(245, 211, 109, 0.85)" stroke-width="1.2" fill="rgba(245, 211, 109, 0.12)"/>
+                <ellipse cx="95" cy="52" rx="34" ry="7.5" stroke="rgba(245, 211, 109, 0.5)" stroke-width="0.7" stroke-dasharray="2,2"/>
+                
+                <!-- Frosted Sèvres Glass Tumbler Profile -->
+                <path d="M48 52 L52 188 Q52 198 64 198 L126 198 Q138 198 138 188 L142 52" stroke="#F5D36D" stroke-width="1.8" fill="rgba(12, 18, 14, 0.6)"/>
+                <!-- Upper Beveled Rim -->
+                <ellipse cx="95" cy="52" rx="48" ry="11.5" stroke="#F5D36D" stroke-width="1.5"/>
+                
+                <!-- Glass Wall Thickness Hatch Lines -->
+                <line x1="50" y1="80" x2="60" y2="70" stroke="rgba(245, 211, 109, 0.35)" stroke-width="0.6"/>
+                <line x1="50" y1="100" x2="60" y2="90" stroke="rgba(245, 211, 109, 0.35)" stroke-width="0.6"/>
+                <line x1="50" y1="120" x2="60" y2="110" stroke="rgba(245, 211, 109, 0.35)" stroke-width="0.6"/>
+                
+                <!-- Heavy 14mm Base & Solid Crystal Pedestal -->
+                <ellipse cx="95" cy="186" rx="38" ry="7.5" stroke="rgba(245, 211, 109, 0.7)" stroke-width="1" stroke-dasharray="3,2"/>
+                <line x1="52" y1="186" x2="138" y2="186" stroke="rgba(245, 211, 109, 0.6)" stroke-width="0.9"/>
+                
+                <!-- Diameter Gauge -->
+                <line x1="48" y1="212" x2="142" y2="212" stroke="rgba(245, 211, 109, 0.45)" stroke-dasharray="2,3" stroke-width="0.8"/>
+                <line x1="48" y1="207" x2="48" y2="217" stroke="#F5D36D" stroke-width="0.9"/>
+                <line x1="142" y1="207" x2="142" y2="217" stroke="#F5D36D" stroke-width="0.9"/>
+                <text x="95" y="222" fill="#F5D36D" font-size="9.5" font-family="'Caveat', cursive" text-anchor="middle">↔ ⌀ 78.0 mm (250g)</text>
+              </svg>
+            </div>
+          </div>
+          <div class="flacon-silhouette-meta">
+            <span class="vessel-badge">SANCTUARY VESSEL · 250G</span>
+            <h3 class="vessel-title">Botanical Sanctuary Candle</h3>
+            <p class="vessel-spec">Frosted Sèvres Tumbler · Solid Gold Lid & Pure Soy Wax</p>
+            <div class="vessel-action-line">
+              <span class="vessel-price">250 G · $55</span>
+              <a href="main.html?buy=prod-elea-candle#prod-elea-candle" class="vessel-discover-link" data-product="prod-elea-candle">
+                <span>ACQUIRE</span>
+                <span class="link-arrow">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PERIMETER-ONLY HUD (ZERO OBSTRUCTION ON THE BUTTERFLY) -->
+      <div class="perimeter-hud" id="perimeter-hud">
+        
+        <!-- Opening Cue: Top & Bottom Perimeter (0% - 25%) -->
+        <div class="perimeter-scene scene-hero active" id="scene-hero">
+          <div class="top-title-lockup">
+            <span class="micro-tag">MAISON DE PARFUM</span>
+            <h1 class="brand-display-title">ÉLÉA</h1>
+            <span class="edition-tag">EAU DE PARFUM</span>
+          </div>
+
+          <div class="bottom-statement-lockup">
+            <p class="hero-quote">“A fragrance that feels like a dream.”</p>
+            <div class="scroll-discover-cue">
+              <span>SCROLL TO AWAKEN</span>
+              <span class="down-indicator">&darr;</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 1 (15% - 35%): First Spray (Opening) -->
+        <div class="perimeter-scene scene-notes-1" id="scene-notes-1">
+          <div class="sidebar-note-card bottom-left-card">
+            <div class="note-eyebrow-badge">
+              <span class="eyebrow-icon">✦</span>
+              <span class="eyebrow-text">FIRST SPRAY</span>
+            </div>
+            <h2 class="note-heading">
+              <span class="note-part">FRESH CITRUS</span>
+              <span class="note-sep">&bull;</span>
+              <span class="note-part">SWEET PEAR</span>
+            </h2>
+            <p class="note-caption">
+              Bright and clean — like stepping into a morning garden right after fresh rain.
+            </p>
+            <span class="note-profile">CRISP &bull; JUICY &bull; REFRESHING</span>
+          </div>
+        </div>
+
+        <!-- Chapter 2 (35% - 55%): As It Settles (Heart) -->
+        <div class="perimeter-scene scene-notes-2" id="scene-notes-2">
+          <div class="sidebar-note-card bottom-right-card">
+            <div class="note-eyebrow-badge">
+              <span class="eyebrow-icon">✦</span>
+              <span class="eyebrow-text">AFTER A FEW MINUTES</span>
+            </div>
+            <h2 class="note-heading">
+              <span class="note-part">SOFT PEONY</span>
+              <span class="note-sep">&bull;</span>
+              <span class="note-part">WILD JASMINE</span>
+            </h2>
+            <p class="note-caption">
+              A gentle, warm floral that softens and blends naturally with your skin through the day.
+            </p>
+            <span class="note-profile">SOFT &bull; GENTLE &bull; ROMANTIC</span>
+          </div>
+        </div>
+
+        <!-- Chapter 3 (55% - 75%): Hours Later (Base) -->
+        <div class="perimeter-scene scene-notes-3" id="scene-notes-3">
+          <div class="sidebar-note-card bottom-left-card">
+            <div class="note-eyebrow-badge">
+              <span class="eyebrow-icon">✦</span>
+              <span class="eyebrow-text">HOURS LATER</span>
+            </div>
+            <h2 class="note-heading">
+              <span class="note-part">WARM AMBER</span>
+              <span class="note-sep">&bull;</span>
+              <span class="note-part">CEDARWOOD</span>
+            </h2>
+            <p class="note-caption">
+              Cozy and subtle — the comforting, quiet scent people notice when you're close.
+            </p>
+            <span class="note-profile">COZY &bull; SUBTLE &bull; ALL-DAY WEAR</span>
+          </div>
+        </div>
+
+        <!-- Chapter 4 (75% - 88%): For Your Home (Candle) -->
+        <div class="perimeter-scene scene-notes-4" id="scene-notes-4">
+          <div class="sidebar-note-card bottom-right-card">
+            <div class="note-eyebrow-badge">
+              <span class="eyebrow-icon">✦</span>
+              <span class="eyebrow-text">FOR YOUR ROOM</span>
+            </div>
+            <h2 class="note-heading">
+              <span class="note-part">ROSE & WOOD</span>
+              <span class="note-sep">&bull;</span>
+              <span class="note-part">SOY CANDLE</span>
+            </h2>
+            <p class="note-caption">
+              Light it in the evening to make your whole room feel calm, warm, and peaceful.
+            </p>
+            <span class="note-profile">CALM &bull; RELAXING &bull; 60H GLOW</span>
+          </div>
+        </div>
+
+        <!-- End of Video Climax: Full Cinematic Visual Frame (88% - 100%) -->
+        <div class="perimeter-scene scene-end-climax" id="scene-end-climax">
+          <div class="climax-cinematic-backdrop"></div>
+          <div class="climax-overlay-container">
+            <!-- Center Monumental Serif Display -->
+            <div class="climax-center-lockup">
+              <span class="climax-overline">THE JOURNEY ENDS.</span>
+              <h2 class="climax-display-title">
+                <span class="climax-title-line">WEAR</span>
+                <span class="climax-title-line">THE UNREAL.</span>
+              </h2>
+              <p class="climax-subtitle">A fragrance inspired by a place that doesn't exist.</p>
+            </div>
+
+            <!-- Climax Bottom Actions Row (Dual-flanked on desktop, clean non-overlapping column on mobile) -->
+            <div class="climax-bottom-row">
+              <!-- Left on Desktop / Top on Mobile: Thank you & Social Icons -->
+              <div class="climax-bottom-left">
+                <span class="climax-thanks-label">THANK YOU FOR JOINING THE JOURNEY.</span>
+                <div class="climax-socials-row">
+                  <a href="https://instagram.com" target="_blank" class="climax-social-btn" title="Instagram">
+                    <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://pinterest.com" target="_blank" class="climax-social-btn" title="Pinterest">
+                    <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="12" y1="4" x2="12" y2="20"/><path d="M8 8 C10 4 14 4 16 8 C18 12 14 16 12 16 C10 16 8 13 8 10"/></svg>
+                  </a>
+                  <a href="https://twitter.com" target="_blank" class="climax-social-btn" title="Twitter / X">
+                    <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="1.8"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Right on Desktop / Center on Mobile: Discover the Fragrance CTA Button -->
+              <div class="climax-bottom-right">
+                <a href="main.html" class="climax-discover-btn" id="btn-discover-fragrance">
+                  <span class="cta-text">DISCOVER THE FRAGRANCE</span>
+                  <span class="cta-arrow-circle">&rarr;</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Bottom Trust Bar -->
+            <div class="climax-trust-bar">
+              <div class="climax-trust-cell">
+                <span class="trust-icon">🎁</span>
+                <div class="trust-info">
+                  <span class="trust-title">FREE SHIPPING</span>
+                  <span class="trust-sub">ON ORDERS ABOVE $120</span>
+                </div>
+              </div>
+              <div class="climax-trust-cell">
+                <span class="trust-icon">🍶</span>
+                <div class="trust-info">
+                  <span class="trust-title">COMPLIMENTARY SAMPLES</span>
+                  <span class="trust-sub">ON EVERY ORDER</span>
+                </div>
+              </div>
+              <div class="climax-trust-cell">
+                <span class="trust-icon">🔒</span>
+                <div class="trust-info">
+                  <span class="trust-title">SECURE PAYMENT</span>
+                  <span class="trust-sub">SSL ENCRYPTED</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /perimeter-hud -->
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="audio.js?v=2"></script>
+  <script src="particles.js"></script>
+  <script src="app.js?v=6.5"></script>
+</body>
+</html>
