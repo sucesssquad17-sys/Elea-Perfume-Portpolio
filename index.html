@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Italiana&family=Inter:wght@200;300;400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=7.1">
+  <link rel="stylesheet" href="style.css?v=8.0">
 </head>
 <body class="landing-body loading-state">
 
@@ -130,8 +130,8 @@
   <div class="cinema-stage-wrapper" id="cinema-stage-wrapper">
     <div class="cinema-stage-sticky">
       
-      <!-- Video Frame Scrubbing Canvas -->
-      <canvas id="film-canvas" class="film-canvas"></canvas>
+      <!-- Video Frame Scrubbing Canvas (Instant Poster Background for Zero-Lag First Paint) -->
+      <canvas id="film-canvas" class="film-canvas" style="background: #060c08 url('public/frames_opt/frame_001.webp') center / cover no-repeat;"></canvas>
       
       <!-- Subtle Spores Canvas -->
       <canvas id="particle-canvas" class="particle-canvas"></canvas>
@@ -664,6 +664,6 @@
   <!-- Scripts -->
   <script src="audio.js?v=2"></script>
   <script src="particles.js"></script>
-  <script src="app.js?v=7.1"></script>
+  <script src="app.js?v=8.0"></script>
 </body>
 </html>

@@ -817,6 +817,7 @@ body:not(.loading-state) .preloader {
 
 .film-canvas {
   z-index: 10;
+  background: #060c08 url('public/frames_opt/frame_001.webp') center / cover no-repeat;
   filter: contrast(1.03) brightness(1.01) saturate(1.05);
   image-rendering: -webkit-optimize-contrast;
   image-rendering: high-quality;

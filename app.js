@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ('ontouchstart' in window) ||
     (navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === '3g' || navigator.connection.effectiveType === '2g'));
 
-  // On mobile/tablet or constrained connections, load 720p (18MB total) for 60fps lag-free scrubbing.
-  // On desktop broadband, load 1080p Full HD (39MB).
-  const FRAME_PATH_PREFIX = isMobileOrSmall ? 'public/frames_opt/frame_' : 'public/frames_hd/frame_';
+  // High-Performance Sequence Engine (Ultra-smooth 720p WebP: 18MB total vs 39MB HD)
+  // Guarantees instantaneous loading and zero-lag 60fps scrubbing over GitHub Pages
+  const FRAME_PATH_PREFIX = 'public/frames_opt/frame_';
   const FRAME_EXTENSION = '.webp';
 
   const frames = [];
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cached viewport dimensions to completely eliminate forced reflows during RAF loop
   let cachedWidth = window.innerWidth;
   let cachedHeight = window.innerHeight;
-  let currentDpr = 1;
+  let currentDpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
   // Scroll Velocity Dynamics
   let lastScrollY = window.scrollY || 0;
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const preloadStartTime = performance.now();
   const MIN_PRELOAD_MS = 1400; // 1.4s luxury intro
   const MAX_PRELOAD_MS = 2800; // Hard safety timeout to guarantee zero preloader hangs
-  const ESSENTIAL_FRAMES = 25; // 25 key starting frames guarantee instant smooth interaction
+  const ESSENTIAL_FRAMES = 20; // 20 key starting frames guarantee instant smooth interaction
 
   // Check URL params for preloader hold mode
   const urlParams = new URLSearchParams(window.location.search);
@@ -158,6 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
       frameStatus[index] = 2;
       loadedFramesCount++;
 
+      // When frame 0 arrives, immediately paint it!
+      if (index === 0 && lastDrawnFrameIndex === -1) {
+        drawSpecificImage(img);
+        lastDrawnFrameIndex = 0;
+      }
+
       // If user is currently looking at this frame, immediately render it in full fidelity!
       if (Math.abs(currentTargetFrameIndex - index) <= 1) {
         drawFrame(currentTargetFrameIndex);
@@ -165,20 +171,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     img.onerror = () => {
-      // Fallback from HD to optimized frame if HD fails on network
-      if (!isMobileOrSmall) {
-        img.onerror = () => { frameStatus[index] = 3; };
-        img.src = `public/frames_opt/frame_${frameNum}.webp`;
-      } else {
-        frameStatus[index] = 3;
-      }
+      frameStatus[index] = 3;
     };
 
     img.src = `${FRAME_PATH_PREFIX}${frameNum}${FRAME_EXTENSION}`;
   }
 
   // Priority window loading around target frame
-  function requestFrameWindow(centerIdx, radius = 15) {
+  function requestFrameWindow(centerIdx, radius = 12) {
     requestFrame(centerIdx);
     for (let r = 1; r <= radius; r++) {
       requestFrame(centerIdx + r);
@@ -186,54 +186,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Preload frames with intelligent priority & key milestone distribution
+  // Preload frames with intelligent priority & non-congesting progressive loading
   function preloadFrames() {
     if (loaderStatus) loaderStatus.textContent = 'AWAKENING BOTANICAL ESSENCE...';
     updatePreloaderUI();
 
-    // 1. Immediately request the first 30 frames for instantaneous hero scrubbing
-    for (let i = 0; i < 30; i++) {
+    // 1. Immediately request Frame 0 and the first 20 frames
+    for (let i = 0; i < 20; i++) {
       requestFrame(i);
     }
 
-    // 2. Preload key milestone frames across the entire sequence (every 8th frame: 8, 16, 24...)
-    // This guarantees that regardless of where the user jumps or scrolls, a crisp nearby frame
-    // is ALWAYS within 4 frames of distance, preventing any freezing or sticking on one frame!
-    setTimeout(() => {
-      for (let i = 32; i < TOTAL_FRAMES; i += 8) {
+    // 2. Preload key milestone frames (every 10th frame: 20, 30, 40... 470) in small spaced batches
+    // Only ~45 small frames (~1.7 MB total) staggered so they don't block
+    let milestoneIdx = 20;
+    function loadMilestoneBatch() {
+      const end = Math.min(TOTAL_FRAMES, milestoneIdx + 60);
+      for (let i = milestoneIdx; i < end; i += 10) {
         requestFrame(i);
       }
-    }, 100);
-
-    // 3. Progressively fill in all remaining frames in controlled non-saturating batches
-    let currentFillIndex = 0;
-    const BATCH_SIZE = 12;
-
-    function streamRemainingFrames() {
-      if (currentFillIndex >= TOTAL_FRAMES) return;
-
-      let loadedInBatch = 0;
-      while (currentFillIndex < TOTAL_FRAMES && loadedInBatch < BATCH_SIZE) {
-        if (frameStatus[currentFillIndex] === 0) {
-          requestFrame(currentFillIndex);
-          loadedInBatch++;
-        }
-        currentFillIndex++;
-      }
-
-      // Schedule next batch with small breathing room so user scroll requests always take network priority
-      if (currentFillIndex < TOTAL_FRAMES) {
-        setTimeout(streamRemainingFrames, 40);
+      milestoneIdx = end;
+      if (milestoneIdx < TOTAL_FRAMES) {
+        setTimeout(loadMilestoneBatch, 150);
       }
     }
+    setTimeout(loadMilestoneBatch, 120);
 
-    setTimeout(streamRemainingFrames, 300);
+    // 3. Background progressive fill in slow, gentle batches so user scroll requests ALWAYS take priority
+    let fillIdx = 20;
+    const BATCH_SIZE = 6;
+    function streamBackground() {
+      if (fillIdx >= TOTAL_FRAMES) return;
+
+      let count = 0;
+      while (fillIdx < TOTAL_FRAMES && count < BATCH_SIZE) {
+        if (frameStatus[fillIdx] === 0) {
+          requestFrame(fillIdx);
+          count++;
+        }
+        fillIdx++;
+      }
+
+      if (fillIdx < TOTAL_FRAMES) {
+        setTimeout(streamBackground, 120);
+      }
+    }
+    setTimeout(streamBackground, 600);
   }
 
   function onPreloaderComplete() {
     if (isReady) return;
     isReady = true;
     if (preloaderLoopId) cancelAnimationFrame(preloaderLoopId);
+
+    // Ensure frame 0 is drawn immediately
+    if (frames[0]?.complete && frames[0]?.naturalWidth > 0) {
+      drawSpecificImage(frames[0]);
+      lastDrawnFrameIndex = 0;
+    } else {
+      drawFrame(0);
+    }
 
     // Smoothly dissolve preloader veil
     if (preloader) {
@@ -247,13 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('loading-state');
     resizeCanvas();
     updateScrollProgress();
-    drawFrame(0);
     startRenderLoop();
   }
 
   // Responsive Canvas Sizing (Reflow isolated strictly to resize event)
   function resizeCanvas() {
-    currentDpr = Math.min(window.devicePixelRatio || 1, isMobileOrSmall ? 1.5 : 2);
+    currentDpr = Math.min(window.devicePixelRatio || 1, 1.5);
     cachedWidth = canvas.clientWidth || window.innerWidth;
     cachedHeight = canvas.clientHeight || window.innerHeight;
 
@@ -262,12 +272,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ctx.setTransform(currentDpr, 0, 0, currentDpr, 0, 0);
     ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = isMobileOrSmall ? 'medium' : 'high';
+    ctx.imageSmoothingQuality = 'medium';
 
-    if (lastDrawnFrameIndex >= 0) {
+    if (lastDrawnFrameIndex >= 0 && frames[lastDrawnFrameIndex]?.complete && frames[lastDrawnFrameIndex]?.naturalWidth > 0) {
       drawSpecificImage(frames[lastDrawnFrameIndex]);
-    } else {
-      drawFrame(0);
+    } else if (frames[0]?.complete && frames[0]?.naturalWidth > 0) {
+      drawSpecificImage(frames[0]);
+      lastDrawnFrameIndex = 0;
     }
   }
 
@@ -281,27 +292,26 @@ document.addEventListener('DOMContentLoaded', () => {
   function drawFrame(frameIdx) {
     currentTargetFrameIndex = frameIdx;
 
-    // Stream frames immediately surrounding the user's scroll position
-    requestFrameWindow(frameIdx, 14);
+    // Stream frames immediately surrounding the user's scroll position with high priority
+    requestFrameWindow(frameIdx, 10);
 
     // 1. Direct hit: If target frame is completely loaded, render it immediately!
-    if (frameStatus[frameIdx] === 2 && frames[frameIdx].complete && frames[frameIdx].naturalWidth > 0) {
+    if (frameStatus[frameIdx] === 2 && frames[frameIdx]?.complete && frames[frameIdx]?.naturalWidth > 0) {
       drawSpecificImage(frames[frameIdx]);
       lastDrawnFrameIndex = frameIdx;
       return;
     }
 
     // 2. Intelligent Nearest-Frame Fallback:
-    // If target frame is still downloading over GitHub Pages, find the closest loaded frame!
     let nearestIdx = -1;
     for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
       const prev = frameIdx - offset;
       const next = frameIdx + offset;
-      if (prev >= 0 && frameStatus[prev] === 2 && frames[prev].complete && frames[prev].naturalWidth > 0) {
+      if (prev >= 0 && frameStatus[prev] === 2 && frames[prev]?.complete && frames[prev]?.naturalWidth > 0) {
         nearestIdx = prev;
         break;
       }
-      if (next < TOTAL_FRAMES && frameStatus[next] === 2 && frames[next].complete && frames[next].naturalWidth > 0) {
+      if (next < TOTAL_FRAMES && frameStatus[next] === 2 && frames[next]?.complete && frames[next]?.naturalWidth > 0) {
         nearestIdx = next;
         break;
       }
