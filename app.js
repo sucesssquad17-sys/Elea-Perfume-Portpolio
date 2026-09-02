@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cached viewport dimensions to completely eliminate forced reflows during RAF loop
   let cachedWidth = window.innerWidth;
   let cachedHeight = window.innerHeight;
-  let currentDpr = Math.min(window.devicePixelRatio || 1, isMobileOrSmall ? 1.0 : 1.5);
+  let currentDpr = Math.min(window.devicePixelRatio || 1, 2.0);
   // On mobile touchscreens, stepping by 2 reduces bandwidth and memory by 50% for buttery 60fps
   const FRAME_STEP = isMobileOrSmall ? 2 : 1;
 

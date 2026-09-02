@@ -3783,8 +3783,9 @@ body:not(.loading-state) .preloader {
 
   .film-canvas {
     background: #060c08 url('public/frames_mobile/frame_001.webp') center / cover no-repeat !important;
-    filter: none !important; /* Eliminates full-screen software color shader on mobile GPU */
-    image-rendering: auto !important;
+    filter: contrast(1.04) brightness(1.02) saturate(1.06) !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: high-quality !important;
     will-change: transform;
     transform: translateZ(0);
   }
