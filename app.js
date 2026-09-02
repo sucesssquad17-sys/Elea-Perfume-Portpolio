@@ -38,16 +38,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const timelineIndicator = document.getElementById('timeline-indicator');
   const timelineDots = document.querySelectorAll('.timeline-dot');
 
-  // Configuration (1080p Full HD Cinema Sequence)
+  // Configuration & Adaptive Resolution Engine
   const TOTAL_FRAMES = 478;
-  const FRAME_PATH_PREFIX = 'public/frames_hd/frame_';
+  const isMobileOrSmall = (window.innerWidth <= 1024) ||
+    (window.matchMedia && window.matchMedia('(max-width: 1024px)').matches) ||
+    ('ontouchstart' in window) ||
+    (navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === '3g' || navigator.connection.effectiveType === '2g'));
+
+  // On mobile/tablet or constrained connections, load 720p (18MB total) for 60fps lag-free scrubbing.
+  // On desktop broadband, load 1080p Full HD (39MB).
+  const FRAME_PATH_PREFIX = isMobileOrSmall ? 'public/frames_opt/frame_' : 'public/frames_hd/frame_';
   const FRAME_EXTENSION = '.webp';
 
   const frames = [];
+  // Status flags: 0 = unrequested, 1 = loading, 2 = loaded, 3 = error
+  const frameStatus = new Uint8Array(TOTAL_FRAMES);
   let loadedFramesCount = 0;
   let targetProgress = 0;
   let smoothProgress = 0;
-  let currentFrameIndex = -1;
+  let currentTargetFrameIndex = 0;
+  let lastDrawnFrameIndex = -1;
   let isReady = false;
 
   // Cached viewport dimensions to completely eliminate forced reflows during RAF loop
@@ -69,12 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const pad3 = (num) => String(num).padStart(3, '0');
 
   let displayPercent = 0;
-  let targetPercent = 0;
   let preloaderLoopId = null;
   const preloadStartTime = performance.now();
-  const MIN_PRELOAD_MS = 1600; // 1.6s quick luxury reveal
-  const MAX_PRELOAD_MS = 2500; // Hard safety timeout: guaranteed to never get stuck!
-  const ESSENTIAL_FRAMES = 15; // Only 15 frames needed to reveal site immediately
+  const MIN_PRELOAD_MS = 1400; // 1.4s luxury intro
+  const MAX_PRELOAD_MS = 2800; // Hard safety timeout to guarantee zero preloader hangs
+  const ESSENTIAL_FRAMES = 25; // 25 key starting frames guarantee instant smooth interaction
 
   // Check URL params for preloader hold mode
   const urlParams = new URLSearchParams(window.location.search);
@@ -112,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else loaderStatus.textContent = 'ÉLÉA READY';
     }
 
-    // Dismiss when essential frames are ready OR safety timeout of 2.5s is reached
+    // Dismiss when essential frames are ready OR safety timeout is reached
     const isSafetyExpired = elapsed >= MAX_PRELOAD_MS;
     const isReadyToReveal = (loadedFramesCount >= ESSENTIAL_FRAMES && elapsed >= MIN_PRELOAD_MS) || displayPercent >= 99;
 
@@ -122,61 +131,100 @@ document.addEventListener('DOMContentLoaded', () => {
       if (loaderBar) loaderBar.style.width = '100%';
       if (loaderPercent) loaderPercent.textContent = '100%';
       if (loaderStatus) loaderStatus.textContent = 'ÉLÉA READY';
-      setTimeout(onPreloaderComplete, 200);
+      setTimeout(onPreloaderComplete, 180);
     }
   }
 
-  // Preload frames asynchronously with progressive non-blocking decoding
+  // Request a single frame download
+  function requestFrame(index) {
+    if (index < 0 || index >= TOTAL_FRAMES) return;
+    if (frameStatus[index] !== 0) return; // already loading, loaded, or errored
+
+    frameStatus[index] = 1;
+    const img = frames[index];
+    const frameNum = pad3(index + 1);
+
+    img.onload = () => {
+      frameStatus[index] = 2;
+      loadedFramesCount++;
+
+      // If user is currently looking at this frame, immediately render it in full fidelity!
+      if (Math.abs(currentTargetFrameIndex - index) <= 1) {
+        drawFrame(currentTargetFrameIndex);
+      }
+    };
+
+    img.onerror = () => {
+      // Fallback from HD to optimized frame if HD fails on network
+      if (!isMobileOrSmall) {
+        img.onerror = () => { frameStatus[index] = 3; };
+        img.src = `public/frames_opt/frame_${frameNum}.webp`;
+      } else {
+        frameStatus[index] = 3;
+      }
+    };
+
+    img.src = `${FRAME_PATH_PREFIX}${frameNum}${FRAME_EXTENSION}`;
+  }
+
+  // Priority window loading around target frame
+  function requestFrameWindow(centerIdx, radius = 15) {
+    requestFrame(centerIdx);
+    for (let r = 1; r <= radius; r++) {
+      requestFrame(centerIdx + r);
+      requestFrame(centerIdx - r);
+    }
+  }
+
+  // Preload frames with intelligent priority & key milestone distribution
   function preloadFrames() {
     if (loaderStatus) loaderStatus.textContent = 'AWAKENING BOTANICAL ESSENCE...';
     updatePreloaderUI();
 
-    // Initialize all 478 image objects in array
+    // Initialize all 478 image objects
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
       img.decoding = 'async';
       frames.push(img);
     }
 
-    // Load initial essential batch (1-35) immediately
-    loadFrameBatch(1, 35);
-
-    // Stream remaining frames in fast successive micro-batches
-    let nextStart = 36;
-    const BATCH_SIZE = 25;
-
-    function loadNextBatches() {
-      if (nextStart > TOTAL_FRAMES) return;
-      const end = Math.min(TOTAL_FRAMES, nextStart + BATCH_SIZE - 1);
-      loadFrameBatch(nextStart, end);
-      nextStart = end + 1;
-      setTimeout(loadNextBatches, 30);
+    // 1. Immediately request the first 30 frames for instantaneous hero scrubbing
+    for (let i = 0; i < 30; i++) {
+      requestFrame(i);
     }
 
-    setTimeout(loadNextBatches, 60);
-  }
+    // 2. Preload key milestone frames across the entire sequence (every 8th frame: 8, 16, 24...)
+    // This guarantees that regardless of where the user jumps or scrolls, a crisp nearby frame
+    // is ALWAYS within 4 frames of distance, preventing any freezing or sticking on one frame!
+    setTimeout(() => {
+      for (let i = 32; i < TOTAL_FRAMES; i += 8) {
+        requestFrame(i);
+      }
+    }, 100);
 
-  function loadFrameBatch(start, end) {
-    for (let i = start; i <= end; i++) {
-      const img = frames[i - 1];
-      const frameNum = pad3(i);
+    // 3. Progressively fill in all remaining frames in controlled non-saturating batches
+    let currentFillIndex = 0;
+    const BATCH_SIZE = 12;
 
-      img.onload = () => {
-        loadedFramesCount++;
-        if (loadedFramesCount === 1) {
-          resizeCanvas();
-          drawFrame(0);
+    function streamRemainingFrames() {
+      if (currentFillIndex >= TOTAL_FRAMES) return;
+
+      let loadedInBatch = 0;
+      while (currentFillIndex < TOTAL_FRAMES && loadedInBatch < BATCH_SIZE) {
+        if (frameStatus[currentFillIndex] === 0) {
+          requestFrame(currentFillIndex);
+          loadedInBatch++;
         }
-      };
+        currentFillIndex++;
+      }
 
-      img.onerror = () => {
-        img.onerror = () => { loadedFramesCount++; };
-        img.src = `public/frames_opt/frame_${frameNum}.webp`;
-        loadedFramesCount++;
-      };
-
-      img.src = `${FRAME_PATH_PREFIX}${frameNum}${FRAME_EXTENSION}`;
+      // Schedule next batch with small breathing room so user scroll requests always take network priority
+      if (currentFillIndex < TOTAL_FRAMES) {
+        setTimeout(streamRemainingFrames, 40);
+      }
     }
+
+    setTimeout(streamRemainingFrames, 300);
   }
 
   function onPreloaderComplete() {
@@ -203,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Responsive Canvas Sizing (Reflow isolated strictly to resize event)
   function resizeCanvas() {
-    currentDpr = Math.min(window.devicePixelRatio || 1, 2);
+    currentDpr = Math.min(window.devicePixelRatio || 1, isMobileOrSmall ? 1.5 : 2);
     cachedWidth = canvas.clientWidth || window.innerWidth;
     cachedHeight = canvas.clientHeight || window.innerHeight;
 
@@ -212,10 +260,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ctx.setTransform(currentDpr, 0, 0, currentDpr, 0, 0);
     ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
+    ctx.imageSmoothingQuality = isMobileOrSmall ? 'medium' : 'high';
 
-    if (currentFrameIndex >= 0) {
-      drawFrame(currentFrameIndex);
+    if (lastDrawnFrameIndex >= 0) {
+      drawSpecificImage(frames[lastDrawnFrameIndex]);
+    } else {
+      drawFrame(0);
     }
   }
 
@@ -225,16 +275,64 @@ document.addEventListener('DOMContentLoaded', () => {
     resizeTimeout = setTimeout(resizeCanvas, 60);
   }, { passive: true });
 
-  // High-Performance Frame Drawing (Zero forced reflow, cover aspect ratio)
+  // High-Performance Frame Drawing with Nearest-Loaded Fallback (Zero Freezes)
   function drawFrame(frameIdx) {
-    const img = frames[frameIdx];
-    if (!img || !img.complete) return;
+    currentTargetFrameIndex = frameIdx;
+
+    // Stream frames immediately surrounding the user's scroll position
+    requestFrameWindow(frameIdx, 14);
+
+    // 1. Direct hit: If target frame is completely loaded, render it immediately!
+    if (frameStatus[frameIdx] === 2 && frames[frameIdx].complete && frames[frameIdx].naturalWidth > 0) {
+      drawSpecificImage(frames[frameIdx]);
+      lastDrawnFrameIndex = frameIdx;
+      return;
+    }
+
+    // 2. Intelligent Nearest-Frame Fallback:
+    // If target frame is still downloading over GitHub Pages, find the closest loaded frame!
+    let nearestIdx = -1;
+    for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+      const prev = frameIdx - offset;
+      const next = frameIdx + offset;
+      if (prev >= 0 && frameStatus[prev] === 2 && frames[prev].complete && frames[prev].naturalWidth > 0) {
+        nearestIdx = prev;
+        break;
+      }
+      if (next < TOTAL_FRAMES && frameStatus[next] === 2 && frames[next].complete && frames[next].naturalWidth > 0) {
+        nearestIdx = next;
+        break;
+      }
+    }
+
+    // If a nearby loaded frame exists, draw it so scrubbing is 100% fluid with zero sticking!
+    if (nearestIdx >= 0) {
+      if (nearestIdx !== lastDrawnFrameIndex) {
+        drawSpecificImage(frames[nearestIdx]);
+        lastDrawnFrameIndex = nearestIdx;
+      }
+      return;
+    }
+
+    // 3. Fallback to last drawn frame or frame 0
+    if (lastDrawnFrameIndex >= 0 && frames[lastDrawnFrameIndex]?.complete && frames[lastDrawnFrameIndex]?.naturalWidth > 0) {
+      return;
+    }
+    if (frames[0]?.complete && frames[0]?.naturalWidth > 0) {
+      drawSpecificImage(frames[0]);
+      lastDrawnFrameIndex = 0;
+    }
+  }
+
+  // Zero-overhead canvas rendering with cover aspect-ratio
+  function drawSpecificImage(img) {
+    if (!img || !img.complete || img.naturalWidth === 0) return;
 
     const cWidth = cachedWidth;
     const cHeight = cachedHeight;
-    const imgRatio = 1920 / 1080;
+    const imgRatio = 16 / 9; // Both 1920x1080 and 1280x720 are 16:9
     const canvasRatio = cWidth / cHeight;
-    
+
     let drawWidth, drawHeight, offsetX, offsetY;
 
     if (canvasRatio > imgRatio) {
@@ -249,8 +347,6 @@ document.addEventListener('DOMContentLoaded', () => {
       offsetY = 0;
     }
 
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   }
 
@@ -412,6 +508,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     if (maxScroll > 0) {
       targetProgress = Math.min(1, Math.max(0, scrollY / maxScroll));
+      // Pre-request frames around target scroll position immediately for zero network delay!
+      const approxTargetFrame = Math.round(targetProgress * (TOTAL_FRAMES - 1));
+      requestFrameWindow(approxTargetFrame, 16);
     }
 
     scrollVelocity = (scrollY - lastScrollY) * 0.4;
@@ -490,9 +589,8 @@ document.addEventListener('DOMContentLoaded', () => {
         Math.max(0, Math.round(smoothProgress * (TOTAL_FRAMES - 1)))
       );
 
-      if (frameIdx !== currentFrameIndex) {
-        currentFrameIndex = frameIdx;
-        drawFrame(currentFrameIndex);
+      if (frameIdx !== lastDrawnFrameIndex || (frameStatus[frameIdx] === 2 && lastDrawnFrameIndex !== frameIdx)) {
+        drawFrame(frameIdx);
       }
 
       // Update HUD Scene overlays & Chapter Timeline
