@@ -44,9 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ('ontouchstart' in window) ||
     (navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === '3g' || navigator.connection.effectiveType === '2g'));
 
-  // Mobile: 80 ultra-lightweight frames (1.2 MB total!) — 100% preloaded during intro for zero lag
-  // Desktop: 478 frames (18.5 MB) for ultra-fine mousewheel scrubbing
-  const TOTAL_FRAMES = isMobileOrSmall ? 80 : 478;
+  // Mobile: 100 vertical 9:16 ultra-optimized frames (1.8 MB total!) — 100% preloaded during intro
+  // Desktop: 478 widescreen 16:9 frames (18.5 MB) for ultra-fine mousewheel scrubbing
+  const TOTAL_FRAMES = isMobileOrSmall ? 100 : 478;
   const FRAME_PATH_PREFIX = isMobileOrSmall ? 'public/frames_mobile/frame_' : 'public/frames_opt/frame_';
   const FRAME_EXTENSION = '.webp';
 
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const preloadStartTime = performance.now();
   const MIN_PRELOAD_MS = 1400; // 1.4s luxury intro
   const MAX_PRELOAD_MS = 2800; // Hard safety timeout to guarantee zero preloader hangs
-  const ESSENTIAL_FRAMES = isMobileOrSmall ? 50 : 20; // On mobile, 50 frames (750KB) guarantees 60fps instant scrub
+  const ESSENTIAL_FRAMES = isMobileOrSmall ? 60 : 20; // 60 frames on mobile guarantees 60fps instant scrub
 
   // Check URL params for preloader hold mode
   const urlParams = new URLSearchParams(window.location.search);
@@ -351,13 +351,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Zero-overhead canvas rendering with cover aspect-ratio
+  // Zero-overhead canvas rendering with dynamic cover aspect-ratio (9:16 vertical on mobile, 16:9 on desktop)
   function drawSpecificImage(img) {
     if (!img || !img.complete || img.naturalWidth === 0) return;
 
     const cWidth = cachedWidth;
     const cHeight = cachedHeight;
-    const imgRatio = 16 / 9; // Both 1920x1080 and 1280x720 are 16:9
+    const imgRatio = (img.naturalWidth && img.naturalHeight)
+      ? (img.naturalWidth / img.naturalHeight)
+      : (isMobileOrSmall ? (9 / 16) : (16 / 9));
     const canvasRatio = cWidth / cHeight;
 
     let drawWidth, drawHeight, offsetX, offsetY;
