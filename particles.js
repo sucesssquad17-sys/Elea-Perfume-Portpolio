@@ -10,7 +10,8 @@ class ParticleEngine {
     this.ctx = this.canvas.getContext('2d');
     
     this.particles = [];
-    this.particleCount = 50;
+    const isMobile = (window.innerWidth <= 1024) || ('ontouchstart' in window);
+    this.particleCount = isMobile ? 12 : 50;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     

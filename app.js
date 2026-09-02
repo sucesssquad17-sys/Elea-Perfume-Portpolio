@@ -68,7 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cached viewport dimensions to completely eliminate forced reflows during RAF loop
   let cachedWidth = window.innerWidth;
   let cachedHeight = window.innerHeight;
-  let currentDpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  let currentDpr = Math.min(window.devicePixelRatio || 1, isMobileOrSmall ? 1.0 : 1.5);
+  // On mobile touchscreens, stepping by 2 reduces bandwidth and memory by 50% for buttery 60fps
+  const FRAME_STEP = isMobileOrSmall ? 2 : 1;
 
   // Scroll Velocity Dynamics
   let lastScrollY = window.scrollY || 0;
@@ -178,11 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Priority window loading around target frame
-  function requestFrameWindow(centerIdx, radius = 12) {
-    requestFrame(centerIdx);
+  function requestFrameWindow(centerIdx, radius = 8) {
+    const aligned = centerIdx - (centerIdx % FRAME_STEP);
+    requestFrame(aligned);
     for (let r = 1; r <= radius; r++) {
-      requestFrame(centerIdx + r);
-      requestFrame(centerIdx - r);
+      requestFrame(aligned + r * FRAME_STEP);
+      requestFrame(aligned - r * FRAME_STEP);
     }
   }
 
@@ -191,17 +194,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loaderStatus) loaderStatus.textContent = 'AWAKENING BOTANICAL ESSENCE...';
     updatePreloaderUI();
 
-    // 1. Immediately request Frame 0 and the first 20 frames
-    for (let i = 0; i < 20; i++) {
+    // 1. Immediately request Frame 0 and the first batch of starting frames
+    for (let i = 0; i < 20; i += FRAME_STEP) {
       requestFrame(i);
     }
 
-    // 2. Preload key milestone frames (every 10th frame: 20, 30, 40... 470) in small spaced batches
-    // Only ~45 small frames (~1.7 MB total) staggered so they don't block
+    // 2. Preload key milestone frames across the sequence in small spaced batches
     let milestoneIdx = 20;
     function loadMilestoneBatch() {
       const end = Math.min(TOTAL_FRAMES, milestoneIdx + 60);
-      for (let i = milestoneIdx; i < end; i += 10) {
+      for (let i = milestoneIdx; i < end; i += (8 * FRAME_STEP)) {
         requestFrame(i);
       }
       milestoneIdx = end;
@@ -223,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
           requestFrame(fillIdx);
           count++;
         }
-        fillIdx++;
+        fillIdx += FRAME_STEP;
       }
 
       if (fillIdx < TOTAL_FRAMES) {
@@ -263,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Responsive Canvas Sizing (Reflow isolated strictly to resize event)
   function resizeCanvas() {
-    currentDpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    currentDpr = Math.min(window.devicePixelRatio || 1, isMobileOrSmall ? 1.0 : 1.5);
     cachedWidth = canvas.clientWidth || window.innerWidth;
     cachedHeight = canvas.clientHeight || window.innerHeight;
 
@@ -580,8 +582,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Main 60/120fps Animation Loop with Fluid Inertial Scrubbing
   function startRenderLoop() {
     function tick() {
-      // Luxury fluid lerp: silky smooth slow-motion interpolation
-      smoothProgress += (targetProgress - smoothProgress) * 0.055;
+      // Responsive fluid lerp: snappy on mobile touch, cinematic on desktop
+      const lerpFactor = isMobileOrSmall ? 0.16 : 0.06;
+      smoothProgress += (targetProgress - smoothProgress) * lerpFactor;
       if (Math.abs(targetProgress - smoothProgress) < 0.0001) {
         smoothProgress = targetProgress;
       }
